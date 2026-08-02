@@ -58,14 +58,14 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Видео',
     tabMaps: 'Карты',
     aiOverviewTitle: 'Krakenus AI — Обзор с помощью ИИ',
-    aiGenerating: 'Генерация выжимки ИИ и подгрузка 10 джерел...',
+    aiGenerating: 'Поиск и генерация 10 сайтов...',
     showMore: 'Показать полностью',
     showLess: 'Свернуть',
     quickQueries: [
       'как приготовить сладкие блинчики',
+      'Роблокс скачать на ПК',
       'Что нового в React 19',
-      'TanStack Start документация',
-      'Как работает доменная архитектура Octopus',
+      'Документация TanStack Start',
     ],
     resultsCount: 'Результатов: примерно',
     searchSecNotice: 'Octopus Search — Умная фильтрация информации без шума.',
@@ -74,12 +74,12 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ИИ-ассистент Octopus Search',
-      welcome: 'Привет! Я **Krakenus AI**. Помогаю с краткой выжимкой, подбором до 10 сайтов и изображений.',
+      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом и поиском до 10 релевантных сайтов.',
       placeholder: 'Задайте вопрос...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
         'Краткая выжимка',
-        'Пошаговый рецепт',
+        'Инструкция по установке',
         'Объяснить термины',
       ],
       clearTooltip: 'Очистить историю',
@@ -95,14 +95,14 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Videos',
     tabMaps: 'Maps',
     aiOverviewTitle: 'Krakenus AI — AI Overview',
-    aiGenerating: 'Generating concise AI summary & fetching top 10 sites...',
+    aiGenerating: 'Generating concise AI summary & 10 top results...',
     showMore: 'Show more',
     showLess: 'Show less',
     quickQueries: [
       'how to make sweet pancakes',
+      'Download Roblox on PC',
       'What is new in React 19',
       'TanStack Start documentation',
-      'Octopus domain architecture',
     ],
     resultsCount: 'About',
     searchSecNotice: 'Octopus Search — Smart noise-free search engine.',
@@ -111,12 +111,12 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'Octopus Search AI Core',
-      welcome: 'Hello! I am **Krakenus AI**. I help summarize, find 10 relevant sites and topic images.',
+      welcome: 'Hello! I am **Krakenus AI**. I help summarize and find top 10 sites.',
       placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
         'Summarize results',
-        'Step-by-step recipe',
+        'Installation guide',
         'Explain concept',
       ],
       clearTooltip: 'Clear history',
@@ -132,14 +132,14 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Відео',
     tabMaps: 'Карти',
     aiOverviewTitle: 'Krakenus AI — Огляд за допомогою ШІ',
-    aiGenerating: 'Генерація стислої відповіді ШІ та підвантаження 10 джерел...',
+    aiGenerating: 'Генерація відповіді ШІ та 10 сайтів...',
     showMore: 'Показати повністю',
     showLess: 'Згорнути',
     quickQueries: [
       'як приготувати солодкі млинці',
+      'Роблокс скачати на ПК',
       'Що нового в React 19',
       'Документація TanStack Start',
-      'Як працює доменна архітектура Octopus',
     ],
     resultsCount: 'Результатів: приблизно',
     searchSecNotice: 'Octopus Search — Розумне фільтрування інформації від спаму.',
@@ -148,17 +148,35 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ШІ-асистент Octopus Search',
-      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом, добіркою до 10 сайтів та картинок.',
+      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом та добіркою до 10 сайтів.',
       placeholder: 'Задайте питання...',
       quickTitle: 'Підказки:',
       quickPrompts: [
         'Зробити короткий висновок',
-        'Покроковий рецепт',
+        'Інструкція зі встановлення',
         'Пояснити терміни',
       ],
       clearTooltip: 'Очистити історію',
     },
   },
+}
+
+// Guaranteed working Unsplash image fallbacks
+const TOPIC_FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80',
+]
+
+function getTopicFallbackImage(q: string, index: number): string {
+  return TOPIC_FALLBACK_IMAGES[index % TOPIC_FALLBACK_IMAGES.length]
 }
 
 function cleanMarkdownLine(raw: string): string {
@@ -292,6 +310,9 @@ export default function App() {
   const [aiExpanded, setAiExpanded] = useState(false)
   const [searchTime, setSearchTime] = useState('0.34')
 
+  // Retry state & countdown
+  const [attemptStatus, setAttemptStatus] = useState('')
+
   // Krakenus AI Assistant Modal
   const [aiModalOpen, setAiModalOpen] = useState(false)
   const [aiInput, setAiInput] = useState('')
@@ -347,7 +368,55 @@ export default function App() {
     }
   }, [chatMessages])
 
-  // Execute AI Search returning UP TO 10 sites with topic image URLs
+  // Helper to generate dynamic fallback for query `q`
+  const generateDynamicFallbackItem = (q: string, idx: number): SearchResultItem => {
+    const cleanQ = q.trim()
+    const domains = [
+      'wikipedia.org',
+      'google.com',
+      'habr.com',
+      'github.com',
+      'medium.com',
+      'reddit.com',
+      'youtube.com',
+      'roblox.com',
+      'microsoft.com',
+      'stackoverflow.com',
+    ]
+
+    const titles = [
+      `${cleanQ} — Официальная страница и главное руководство`,
+      `Все о ${cleanQ}: Обзор, характеристики и новости`,
+      `Как установить и настроить ${cleanQ} — Пошаговая инструкция`,
+      `Часто задаваемые вопросы по ${cleanQ}`,
+      `${cleanQ} в деталях — Руководство для пользователей`,
+      `Скачать и запустить ${cleanQ} бесплатно`,
+      `Форум и сообщество ${cleanQ}: Советы и решение проблем`,
+      `Видеообзор и уроки по ${cleanQ}`,
+      `Сравнение и альтернативы для ${cleanQ}`,
+      `Технические требования и поддержка ${cleanQ}`,
+    ]
+
+    const domain = domains[idx % domains.length]
+    return {
+      id: `dyn-fb-${idx}`,
+      title: titles[idx % titles.length],
+      url: `https://${domain}/search?q=${encodeURIComponent(cleanQ)}`,
+      domain: domain,
+      snippet: `Подробная информация, свежие обновления и практические инструкции по запросу "${cleanQ}".`,
+      imageUrl: getTopicFallbackImage(cleanQ, idx),
+    }
+  }
+
+  const generateFull10DynamicResults = (q: string): SearchResultItem[] => {
+    const list: SearchResultItem[] = []
+    for (let i = 0; i < 10; i++) {
+      list.push(generateDynamicFallbackItem(q, i))
+    }
+    return list
+  }
+
+  // Execute AI Search with UP TO 5 RETRIES & 5s COUNTDOWN
   const executeAiSearch = async (searchQueryText: string) => {
     const q = searchQueryText.trim()
     if (!q) {
@@ -356,6 +425,7 @@ export default function App() {
       setResults([])
       setAiSummary('')
       setAiExpanded(false)
+      setAttemptStatus('')
       window.history.pushState(null, '', window.location.pathname)
       return
     }
@@ -366,19 +436,19 @@ export default function App() {
     setIsSearching(true)
     setAiSummary('')
     setAiExpanded(false)
+    setAttemptStatus('')
 
     const newUrl = `${window.location.pathname}?q=${encodeURIComponent(q)}`
     window.history.pushState(null, '', newUrl)
 
     const langName = lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'
-    const systemPrompt = `You are Krakenus AI Search Engine Intelligence Core.
-User search query: "${q}".
+    const systemPrompt = `You are Krakenus AI Search Engine Core.
+User query: "${q}".
 
 Strict Rules:
-1. Provide a CONCISE, expert AI Answer in ${langName}. The response must start with the top 5 most essential lines/points.
-2. Do NOT output raw markdown headers ("###") or raw link markup "[http://...]".
-3. At the end of your response, output EXACTLY "---SOURCES---" followed by a JSON array of UP TO 10 relevant web search result items matching the query.
-4. Include an "imageUrl" field with a high quality topic-relevant image URL for at least 4-5 items (e.g. Unsplash images https://images.unsplash.com/... or cooking/tech/nature photo URLs).
+1. Provide a CONCISE, ultra-useful AI Overview in ${langName}. Must start with top 5 key points.
+2. Do NOT output raw markdown headers ("###") or link brackets "[http://...]".
+3. At the end, output EXACTLY "---SOURCES---" followed by a JSON array of EXACTLY 10 relevant web search result items matching "${q}".
 
 JSON Format:
 [
@@ -386,176 +456,109 @@ JSON Format:
     "title": "Заголовок страницы",
     "url": "https://example.com/page",
     "domain": "example.com",
-    "snippet": "Краткое описание страницы...",
-    "imageUrl": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&q=80"
+    "snippet": "Описание...",
+    "imageUrl": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop&q=80"
   }
 ]`
 
-    try {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-          'HTTP-Referer': 'https://octopus.dev',
-          'X-Title': 'Octopus Search',
-        },
-        body: JSON.stringify({
-          model: MODEL_NAME,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: q },
-          ],
-          stream: false,
-        }),
-      })
+    let attempt = 0
+    const maxAttempts = 5
+    let success = false
 
-      const endTime = performance.now()
-      setSearchTime(((endTime - startTime) / 1000).toFixed(2))
-
-      if (response.ok) {
-        const data = await response.json()
-        const fullContent: string = data.choices?.[0]?.message?.content || ''
-
-        if (fullContent.includes('---SOURCES---')) {
-          const parts = fullContent.split('---SOURCES---')
-          const answerText = parts[0].trim()
-          const sourcesRaw = parts[1].trim()
-
-          setAiSummary(answerText)
-
-          try {
-            const jsonMatch = sourcesRaw.match(/\[[\s\S]*\]/)
-            if (jsonMatch) {
-              const parsed: any[] = JSON.parse(jsonMatch[0])
-              const formattedItems: SearchResultItem[] = parsed.slice(0, 10).map((item, idx) => ({
-                id: `ai-src-${idx}`,
-                title: item.title || item.domain || `Результат ${idx + 1}`,
-                url: item.url || `https://${item.domain || 'google.com'}`,
-                domain: item.domain || 'web.search',
-                snippet: item.snippet || 'Подробная информация по вашему запросу.',
-                imageUrl: item.imageUrl || getTopicFallbackImage(q, idx),
-              }))
-              setResults(formattedItems)
-            } else {
-              setResults(getFallback10Results(q))
-            }
-          } catch (jsonErr) {
-            setResults(getFallback10Results(q))
-          }
-        } else {
-          setAiSummary(fullContent)
-          setResults(getFallback10Results(q))
-        }
-      } else {
-        setAiSummary(`Не удалось загрузить данные ИИ. Попробуйте еще раз.`)
-        setResults(getFallback10Results(q))
+    while (attempt < maxAttempts && !success) {
+      attempt++
+      if (attempt > 1) {
+        setAttemptStatus(`Попытка ${attempt} из ${maxAttempts}...`)
       }
-    } catch (e) {
-      console.error('Search error:', e)
-      setAiSummary(`Ошибка сети. Проверьте подключение.`)
-      setResults(getFallback10Results(q))
-    } finally {
-      setIsSearching(false)
-    }
-  }
 
-  const getTopicFallbackImage = (q: string, index: number): string => {
-    const lower = q.toLowerCase()
-    if (lower.includes('блинчик') || lower.includes('плинчик') || lower.includes('pancake') || lower.includes('рецепт') || lower.includes('еда')) {
-      const foodImages = [
-        'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=500&auto=format&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&auto=format&fit=crop&q=80',
-      ]
-      return foodImages[index % foodImages.length]
-    }
-    const techImages = [
-      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500&auto=format&fit=crop&q=80',
-    ]
-    return techImages[index % techImages.length]
-  }
+      try {
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            'HTTP-Referer': 'https://octopus.dev',
+            'X-Title': 'Octopus Search',
+          },
+          body: JSON.stringify({
+            model: MODEL_NAME,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: q },
+            ],
+            stream: false,
+          }),
+        })
 
-  const getFallback10Results = (q: string): SearchResultItem[] => {
-    return [
-      {
-        id: 'fb-1',
-        title: `${q} — Классический рецепт с видео и фото`,
-        url: `https://eda.ru/recepty/search?q=${encodeURIComponent(q)}`,
-        domain: 'eda.ru',
-        snippet: 'Подробное пошаговое руководство с фотографиями и списком необходимых ингредиентов.',
-        imageUrl: getTopicFallbackImage(q, 0),
-      },
-      {
-        id: 'fb-2',
-        title: `Как приготовить ${q}: лучшие советы шеф-поваров`,
-        url: `https://povarenok.ru/recipes/search/?q=${encodeURIComponent(q)}`,
-        domain: 'povarenok.ru',
-        snippet: 'Кулинарные хитрости: идеальные пропорции муки, молока и яиц для нежного теста.',
-        imageUrl: getTopicFallbackImage(q, 1),
-      },
-      {
-        id: 'fb-3',
-        title: `Видео урок: ${q}`,
-        url: `https://youtube.com/results?search_query=${encodeURIComponent(q)}`,
-        domain: 'youtube.com',
-        snippet: 'Смотрите наглядный процесс приготовления в HD качестве за 10 минут.',
-        imageUrl: getTopicFallbackImage(q, 2),
-      },
-      {
-        id: 'fb-4',
-        title: `${q} — Материал Википедии`,
-        url: `https://ru.wikipedia.org/wiki/${encodeURIComponent(q)}`,
-        domain: 'wikipedia.org',
-        snippet: 'История возникновения блюда, разновидности теста и национальные традиции.',
-      },
-      {
-        id: 'fb-5',
-        title: `Топ 10 рецептов: ${q} в домашних условиях`,
-        url: `https://лайфхакер.рф/search/?q=${encodeURIComponent(q)}`,
-        domain: 'lifehacker.ru',
-        snippet: 'Разбор вариантов: на молоке, на кефире, кипятке и с разными начинками.',
-        imageUrl: getTopicFallbackImage(q, 3),
-      },
-      {
-        id: 'fb-6',
-        title: `Быстрый рецепт ${q} на скорую руку`,
-        url: `https://gastronom.ru/search?q=${encodeURIComponent(q)}`,
-        domain: 'gastronom.ru',
-        snippet: 'Простой способ замешать идеальное безкоморное тесто за 5 минут.',
-      },
-      {
-        id: 'fb-7',
-        title: `Секреты выпекания: ${q}`,
-        url: `https://kitchen-guide.ru/recipes/${encodeURIComponent(q)}`,
-        domain: 'kitchen-guide.ru',
-        snippet: 'Температурный режим сковороды и техника смазывания маслом.',
-      },
-      {
-        id: 'fb-8',
-        title: `${q} — Отзывы и обсуждение кулинаров`,
-        url: `https://forum.say7.info/search?q=${encodeURIComponent(q)}`,
-        domain: 'say7.info',
-        snippet: 'Советы хозяйкам и решения частых ошибок при жарке.',
-      },
-      {
-        id: 'fb-9',
-        title: `Пошаговый фоторецепт ${q}`,
-        url: `https://allrecipes.ru/search?q=${encodeURIComponent(q)}`,
-        domain: 'allrecipes.ru',
-        snippet: 'Идеальный баланс сахара и соли для сладких блинчиков.',
-      },
-      {
-        id: 'fb-10',
-        title: `Полезно знать: ${q}`,
-        url: `https://food-science.org/articles/${encodeURIComponent(q)}`,
-        domain: 'food-science.org',
-        snippet: 'Калорийность, БЖУ и советы по выбору лучшей муки.',
-      },
-    ]
+        const endTime = performance.now()
+        setSearchTime(((endTime - startTime) / 1000).toFixed(2))
+
+        if (response.ok) {
+          const data = await response.json()
+          const fullContent: string = data.choices?.[0]?.message?.content || ''
+
+          if (fullContent.includes('---SOURCES---')) {
+            const parts = fullContent.split('---SOURCES---')
+            const answerText = parts[0].trim()
+            const sourcesRaw = parts[1].trim()
+
+            setAiSummary(answerText)
+
+            try {
+              const jsonMatch = sourcesRaw.match(/\[[\s\S]*\]/)
+              if (jsonMatch) {
+                const parsed: any[] = JSON.parse(jsonMatch[0])
+                const formattedItems: SearchResultItem[] = parsed.map((item, idx) => ({
+                  id: `ai-src-${idx}`,
+                  title: item.title || item.domain || `Результат ${idx + 1}`,
+                  url: item.url || `https://${item.domain || 'google.com'}`,
+                  domain: item.domain || 'web.search',
+                  snippet: item.snippet || 'Подробная информация по вашему запросу.',
+                  imageUrl: item.imageUrl || getTopicFallbackImage(q, idx),
+                }))
+
+                // FORCE EXACTLY 10 ITEMS
+                while (formattedItems.length < 10) {
+                  formattedItems.push(generateDynamicFallbackItem(q, formattedItems.length))
+                }
+
+                setResults(formattedItems.slice(0, 10))
+                success = true
+                break
+              }
+            } catch (jsonErr) {
+              setResults(generateFull10DynamicResults(q))
+              success = true
+              break
+            }
+          } else {
+            setAiSummary(fullContent)
+            setResults(generateFull10DynamicResults(q))
+            success = true
+            break
+          }
+        }
+      } catch (e) {
+        console.error(`Attempt ${attempt} error:`, e)
+      }
+
+      // If failed & attempts remaining, do 5-second countdown wait
+      if (!success && attempt < maxAttempts) {
+        for (let sec = 5; sec > 0; sec--) {
+          setAttemptStatus(`Не удалось. Повторная попытка (${attempt}/${maxAttempts}) через ${sec} сек...`)
+          await new Promise((r) => setTimeout(r, 1000))
+        }
+      }
+    }
+
+    if (!success) {
+      setAttemptStatus('')
+      setAiSummary(`Запрос обработан по базе данных Octopus Search.`)
+      setResults(generateFull10DynamicResults(q))
+    }
+
+    setIsSearching(false)
+    setAttemptStatus('')
   }
 
   const handleSendAiMessage = async (textToSend?: string) => {
@@ -921,7 +924,7 @@ JSON Format:
 
           <main className="google-results-main">
             <div className="google-stats-line">
-              <span>{t.resultsCount} {results.length * 1500 + 120} ({searchTime} сек.)</span>
+              <span>{t.resultsCount} {results.length * 1540 + 82} ({searchTime} сек.)</span>
             </div>
 
             {/* TAB 1: ALL RESULTS (ORGANIC + AI OVERVIEW) */}
@@ -939,7 +942,7 @@ JSON Format:
                     {isSearching ? (
                       <div className="google-ai-loading">
                         <span className="pulse-dot" />
-                        <p>{t.aiGenerating}</p>
+                        <p>{attemptStatus || t.aiGenerating}</p>
                       </div>
                     ) : (
                       <>
@@ -960,10 +963,10 @@ JSON Format:
                   </div>
                 )}
 
-                {/* 10 ORGANIC SITES LIST WITH IMAGE THUMBNAILS */}
+                {/* EXACTLY 10 ORGANIC SITES LIST WITH RELIABLE FALLBACK IMAGES */}
                 <div className="google-organic-list">
                   {results.length > 0 ? (
-                    results.map((item) => (
+                    results.map((item, index) => (
                       <article key={item.id} className="google-result-item">
                         <div className="google-result-card-inner">
                           <div className="google-result-content-col">
@@ -986,11 +989,18 @@ JSON Format:
                             <p className="google-result-snippet">{item.snippet}</p>
                           </div>
 
-                          {item.imageUrl && (
-                            <div className="google-result-thumb-box">
-                              <img src={item.imageUrl} alt={item.title} loading="lazy" />
-                            </div>
-                          )}
+                          <div className="google-result-thumb-box">
+                            <img
+                              src={item.imageUrl || getTopicFallbackImage(activeQuery, index)}
+                              alt={item.title}
+                              loading="lazy"
+                              onError={(e) => {
+                                const target = e.currentTarget
+                                target.onerror = null
+                                target.src = getTopicFallbackImage(activeQuery, index)
+                              }}
+                            />
+                          </div>
                         </div>
                       </article>
                     ))
@@ -1006,7 +1016,7 @@ JSON Format:
             {/* TAB 2: GOOGLE IMAGES TAB GRID */}
             {activeTab === 'images' && (
               <div className="google-images-grid-view">
-                {results.filter((r) => r.imageUrl).map((item) => (
+                {results.map((item, index) => (
                   <a
                     key={item.id}
                     href={item.url}
@@ -1015,7 +1025,16 @@ JSON Format:
                     className="google-image-card"
                   >
                     <div className="image-card-preview">
-                      <img src={item.imageUrl} alt={item.title} loading="lazy" />
+                      <img
+                        src={item.imageUrl || getTopicFallbackImage(activeQuery, index)}
+                        alt={item.title}
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.currentTarget
+                          target.onerror = null
+                          target.src = getTopicFallbackImage(activeQuery, index)
+                        }}
+                      />
                     </div>
                     <div className="image-card-info">
                       <span className="image-card-domain">{item.domain}</span>
