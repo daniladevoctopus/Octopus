@@ -1,23 +1,20 @@
 import {
   ArrowRight,
   Bot,
-  Braces,
   Check,
   ChevronDown,
-  Code2,
   ExternalLink,
-  Filter,
   Globe,
   Globe2,
   Image as ImageIcon,
-  Key,
+  MapPin,
   Newspaper,
   RefreshCw,
   Search as SearchIcon,
   Send,
-  Settings,
   Sparkles,
   User,
+  Video,
   X,
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
@@ -30,8 +27,7 @@ interface SearchResultItem {
   url: string
   domain: string
   snippet: string
-  category: 'all' | 'news' | 'code' | 'image'
-  imageUrl?: string
+  category?: string
   date?: string
 }
 
@@ -51,123 +47,105 @@ const LANGUAGE_CONFIG: Record<Language, { label: string; flag: string }> = {
 
 const SEARCH_TRANSLATIONS = {
   ru: {
-    badge: 'Закрытый бета-тест',
-    tagline: 'Розумный чистый поиск на базе Google API и Krakenus AI Core',
-    placeholder: 'Введите запрос в Google Search...',
-    searchBtn: 'Найти в Google',
-    filterAll: 'Все результаты',
-    filterNews: 'Новости',
-    filterImages: 'Изображения',
-    filterCode: 'Разработка',
-    aiOverviewTitle: 'Krakenus AI — Умный ответ по запросу',
-    aiGenerating: 'Генерация мгновенного ответа по источникам...',
-    quickTitle: 'Популярные запросы:',
+    btnSearch: 'Поиск в Octopus',
+    btnLucky: 'Мне повезет!',
+    placeholder: 'Введите поисковый запрос...',
+    tabAll: 'Все',
+    tabNews: 'Новости',
+    tabImages: 'Картинки',
+    tabVideos: 'Видео',
+    tabMaps: 'Карты',
+    aiOverviewTitle: 'Krakenus AI — Обзор с помощью ИИ',
+    aiGenerating: 'Поиск источников и сгенерированный ответ ИИ...',
     quickQueries: [
       'как приготовить сладкие блинчики',
-      'Что нового в React 19?',
-      'TanStack Start документация',
-      'Google Custom Search API',
+      'Что нового в React 19',
+      'Документация TanStack Start',
+      'Как работает доменная архитектура Octopus',
     ],
-    noResults: 'Результаты по вашему запросу не найдены. Попробуйте сменить запрос.',
+    resultsCount: 'Результатов: примерно',
+    searchSecNotice: 'Octopus Search — Умная фильтрация информации от шума и рекламы.',
     backToHub: 'octopus.dev',
-    resultsFound: 'Найдено чистых результатов:',
-    searchSecNotice: 'Octopus Search 1.0 на базе Google API фильтрует спам и рекламу.',
-    googleApiConfig: 'Настройки Google API',
-    googleApiKeyPlaceholder: 'Ваш Google Search API Key (AIzaSy...)',
-    googleCxPlaceholder: 'Ваш Search Engine ID (CX key...)',
-    saveKeys: 'Сохранить ключи',
-    apiConfigNotice: 'Можно ввести свой Google Custom Search API Key или использовать встроенный веб-индекс.',
+    footerLocation: 'Украина / Global — Из вашего местоположения',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ИИ-ассистент Octopus Search',
-      welcome: 'Приветствую! Я **Krakenus AI**. Я помогаю фильтровать и анализировать результаты поиска Octopus Search. Чем могу помочь?',
+      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом и ответами на любые поисковые запросы.',
       placeholder: 'Задайте вопрос по поиску...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
-        'Сделать краткую выжимку',
-        'Найти рецепт',
+        'Сделать выжимку',
+        'Пошаговый рецепт',
         'Объяснить термины',
       ],
       clearTooltip: 'Очистить историю',
     },
   },
   en: {
-    badge: 'Closed Beta Test',
-    tagline: 'Smart noise-free search powered by Google API and Krakenus AI Core',
-    placeholder: 'Enter query for Google Search...',
-    searchBtn: 'Search Google',
-    filterAll: 'All Results',
-    filterNews: 'News',
-    filterImages: 'Images',
-    filterCode: 'Dev & Code',
-    aiOverviewTitle: 'Krakenus AI — Smart Query Overview',
-    aiGenerating: 'Generating instant verified response...',
-    quickTitle: 'Trending queries:',
+    btnSearch: 'Octopus Search',
+    btnLucky: "I'm Feeling Lucky",
+    placeholder: 'Search the web...',
+    tabAll: 'All',
+    tabNews: 'News',
+    tabImages: 'Images',
+    tabVideos: 'Videos',
+    tabMaps: 'Maps',
+    aiOverviewTitle: 'Krakenus AI — AI Overview',
+    aiGenerating: 'Searching web sources and generating AI Overview...',
     quickQueries: [
       'how to make sweet pancakes',
-      'What is new in React 19?',
-      'TanStack Start docs',
-      'Google Custom Search API',
+      'What is new in React 19',
+      'TanStack Start documentation',
+      'Octopus domain architecture',
     ],
-    noResults: 'No results found for your query.',
+    resultsCount: 'About',
+    searchSecNotice: 'Octopus Search — Smart noise-free search engine.',
     backToHub: 'octopus.dev',
-    resultsFound: 'Clean Google results:',
-    searchSecNotice: 'Octopus Search 1.0 filters out noise and intrusive ads.',
-    googleApiConfig: 'Google API Settings',
-    googleApiKeyPlaceholder: 'Google Search API Key (AIzaSy...)',
-    googleCxPlaceholder: 'Search Engine ID (CX key...)',
-    saveKeys: 'Save API Keys',
-    apiConfigNotice: 'Enter your custom Google Search API keys or use default search engine.',
+    footerLocation: 'Global — From your location',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'Octopus Search AI Core',
-      welcome: 'Welcome! I am **Krakenus AI**. I analyze search results in Octopus Search. How can I help?',
-      placeholder: 'Ask a search question...',
+      welcome: 'Hello! I am **Krakenus AI**. I help analyze and answer your search queries.',
+      placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
-        'Summarize results',
-        'Find recipe',
-        'Explain terms',
+        'Summarize top results',
+        'Step-by-step recipe',
+        'Explain concept',
       ],
       clearTooltip: 'Clear history',
     },
   },
   uk: {
-    badge: 'Закрытий бета-тест',
-    tagline: 'Розумний чистий пошук на базі Google API та Krakenus AI Core',
-    placeholder: 'Введіть запит для Google Search...',
-    searchBtn: 'Знайти в Google',
-    filterAll: 'Усі результати',
-    filterNews: 'Новини',
-    filterImages: 'Зображення',
-    filterCode: 'Розробка',
-    aiOverviewTitle: 'Krakenus AI — Розумна відповідь за запитом',
-    aiGenerating: 'Генерація миттєвої відповіді по джерелах...',
-    quickTitle: 'Популярні запити:',
+    btnSearch: 'Пошук в Octopus',
+    btnLucky: 'Мені пощастить!',
+    placeholder: 'Введіть запит для пошуку...',
+    tabAll: 'Усі',
+    tabNews: 'Новини',
+    tabImages: 'Зображення',
+    tabVideos: 'Відео',
+    tabMaps: 'Карти',
+    aiOverviewTitle: 'Krakenus AI — Огляд за допомогою ШІ',
+    aiGenerating: 'Пошук джерел та генерація миттєвої відповіді ШІ...',
     quickQueries: [
       'як приготувати солодкі млинці',
-      'Що нового в React 19?',
+      'Що нового в React 19',
       'Документація TanStack Start',
-      'Google Custom Search API',
+      'Як працює доменна архітектура Octopus',
     ],
-    noResults: 'Результатів за вашим запитом не знайдено.',
+    resultsCount: 'Результатів: приблизно',
+    searchSecNotice: 'Octopus Search — Розумне фільтрування інформації від спаму.',
     backToHub: 'octopus.dev',
-    resultsFound: 'Знайдено чистих результатів:',
-    searchSecNotice: 'Octopus Search 1.0 на базі Google API фільтрує спам та рекламу.',
-    googleApiConfig: 'Налаштування Google API',
-    googleApiKeyPlaceholder: 'Ваш Google Search API Key (AIzaSy...)',
-    googleCxPlaceholder: 'Ваш Search Engine ID (CX key...)',
-    saveKeys: 'Зберегти ключі',
-    apiConfigNotice: 'Можна ввести свій Google Custom Search API Key або використовувати вбудований пошук.',
+    footerLocation: 'Україна / Global — З вашого розташування',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ШІ-асистент Octopus Search',
-      welcome: 'Вітаю! Я **Krakenus AI**. Я допомагаю з аналізом видачі у Octopus Search. Що вас цікавить?',
-      placeholder: 'Задайте питання по пошуку...',
+      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом та відповідями на будь-які запити.',
+      placeholder: 'Задайте питання...',
       quickTitle: 'Підказки:',
       quickPrompts: [
         'Зробити короткий висновок',
-        'Знайти рецепт',
+        'Покроковий рецепт',
         'Пояснити терміни',
       ],
       clearTooltip: 'Очистити історію',
@@ -196,11 +174,12 @@ function FormattedAiText({ text }: { text: string }) {
         const trimmed = line.trim()
         if (!trimmed) return <div key={lineIdx} className="formatted-spacer" />
 
-        if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('1. ') || trimmed.startsWith('2. ') || trimmed.startsWith('3. ')) {
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || /^\d+\.\s/.test(trimmed)) {
+          const content = trimmed.replace(/^([-*]|\d+\.)\s*/, '')
           return (
             <div key={lineIdx} className="formatted-list-item">
               <span className="list-bullet">•</span>
-              <span>{parseInlineMarkdown(trimmed.replace(/^[-*1-9.]+\s*/, ''))}</span>
+              <span>{parseInlineMarkdown(content)}</span>
             </div>
           )
         }
@@ -288,18 +267,13 @@ export default function App() {
   const [query, setQuery] = useState('')
   const [activeQuery, setActiveQuery] = useState('')
   const [hasSearched, setHasSearched] = useState(false)
-  const [activeCategory, setActiveCategory] = useState<'all' | 'news' | 'code' | 'image'>('all')
+  const [activeTab, setActiveTab] = useState<'all' | 'news' | 'images' | 'videos'>('all')
 
-  // Google API Credentials
-  const [googleApiKey, setGoogleApiKey] = useState('')
-  const [googleCxKey, setGoogleCxKey] = useState('')
-  const [showConfigModal, setShowConfigModal] = useState(false)
-
-  // AI & Search States
+  // Search Results & AI Overview
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [aiSummary, setAiSummary] = useState('')
-  const [aiSummaryLoading, setAiSummaryLoading] = useState(false)
+  const [searchTime, setSearchTime] = useState('0.28')
 
   // Krakenus AI Assistant Modal
   const [aiModalOpen, setAiModalOpen] = useState(false)
@@ -322,23 +296,18 @@ export default function App() {
 
   const chatBottomRef = useRef<HTMLDivElement>(null)
 
-  // Sync with URL query string e.g. ?q=сладкие+блинчики
+  // URL Query Sync (e.g., ?q=сладкие+блинчики)
   useEffect(() => {
     const savedLang = localStorage.getItem('octopus_lang') as Language
     if (savedLang && (savedLang === 'ru' || savedLang === 'en' || savedLang === 'uk')) {
       setLang(savedLang)
     }
-    const savedKey = localStorage.getItem('octopus_google_api_key')
-    const savedCx = localStorage.getItem('octopus_google_cx_key')
-    if (savedKey) setGoogleApiKey(savedKey)
-    if (savedCx) setGoogleCxKey(savedCx)
 
-    // Check URL params on initial load
     const params = new URLSearchParams(window.location.search)
     const qParam = params.get('q')
     if (qParam) {
       setQuery(qParam)
-      executeSearch(qParam)
+      executeAiSearch(qParam)
     }
   }, [])
 
@@ -361,14 +330,8 @@ export default function App() {
     }
   }, [chatMessages])
 
-  const handleSaveGoogleKeys = () => {
-    localStorage.setItem('octopus_google_api_key', googleApiKey)
-    localStorage.setItem('octopus_google_cx_key', googleCxKey)
-    setShowConfigModal(false)
-  }
-
-  // Execute Google Search & AI Overview
-  const executeSearch = async (searchQueryText: string) => {
+  // Execute AI-Driven Search Response + Formatted Sources
+  const executeAiSearch = async (searchQueryText: string) => {
     const q = searchQueryText.trim()
     if (!q) {
       setHasSearched(false)
@@ -379,97 +342,36 @@ export default function App() {
       return
     }
 
+    const startTime = performance.now()
     setHasSearched(true)
     setActiveQuery(q)
     setIsSearching(true)
     setAiSummary('')
 
-    // Update browser URL query param like Google: ?q=search_query
+    // Update URL query string e.g. ?q=...
     const newUrl = `${window.location.pathname}?q=${encodeURIComponent(q)}`
     window.history.pushState(null, '', newUrl)
 
-    let searchItems: SearchResultItem[] = []
+    const langName = lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'
+    const systemPrompt = `You are Krakenus AI, the search engine intelligence core for Octopus Search.
+The user's query is: "${q}".
 
-    // Try Google Custom Search API if API key and CX are available
-    if (googleApiKey && googleCxKey) {
-      try {
-        const url = `https://www.googleapis.com/customsearch/v1?key=${encodeURIComponent(googleApiKey)}&cx=${encodeURIComponent(googleCxKey)}&q=${encodeURIComponent(q)}`
-        const res = await fetch(url)
-        if (res.ok) {
-          const data = await res.json()
-          if (data.items && Array.isArray(data.items)) {
-            searchItems = data.items.map((item: any, idx: number) => ({
-              id: `google-${idx}`,
-              title: item.title || item.htmlTitle,
-              url: item.link,
-              domain: item.displayLink || new URL(item.link).hostname,
-              snippet: item.snippet,
-              category: item.mime || item.pagemap?.cse_image ? 'image' : 'all',
-              imageUrl: item.pagemap?.cse_image?.[0]?.src,
-            }))
-          }
-        }
-      } catch (e) {
-        console.error('Google Custom Search API error:', e)
-      }
-    }
+Instructions:
+1. Provide a comprehensive, clear, expert AI Answer / Overview for this search query in ${langName}. Use bullet points, bold key terms, and 1-2-3 steps where helpful.
+2. At the end of your answer, output EXACTLY the line "---SOURCES---" followed by a JSON array of 4 relevant web sources.
 
-    // Smart Fallback Results if API keys aren't set or returned empty
-    if (searchItems.length === 0) {
-      searchItems = [
-        {
-          id: 'res-1',
-          title: `Рецепты: ${q} — Пошаговый рецепт с фото`,
-          url: `https://eda.ru/recepty/search?q=${encodeURIComponent(q)}`,
-          domain: 'eda.ru',
-          snippet: `Классический рецепт приготовление пошагово. Нежные, ажурные и вкусные блинчики на молоке или кефире. Ингредиенты: мука, яйца, молоко, сахар, щепотка соли.`,
-          category: 'all',
-          date: '2026',
-        },
-        {
-          id: 'res-2',
-          title: `${q} — Лучшие домашние рецепты и секреты приготовления`,
-          url: `https://povarenok.ru/recipes/search/?q=${encodeURIComponent(q)}`,
-          domain: 'povarenok.ru',
-          snippet: `Как приготовить тонкие сладкие блинчики без комочков: добавьте в тесто 2 ложки растительного масла и дайте постоять 15 минут перед жаркой.`,
-          category: 'all',
-          date: '2026',
-        },
-        {
-          id: 'res-3',
-          title: `Видео-урок: ${q} за 15 минут`,
-          url: `https://youtube.com/results?search_query=${encodeURIComponent(q)}`,
-          domain: 'youtube.com',
-          snippet: `Видео-руководство: простые ингредиенты,деальный нагрев сковороды и масляная кисточка для золотистой корочки.`,
-          category: 'news',
-          date: '2026',
-        },
-        {
-          id: 'res-4',
-          title: `${q} — Статья в Википедии`,
-          url: `https://ru.wikipedia.org/wiki/Сладкие_блинчики`,
-          domain: 'wikipedia.org',
-          snippet: `Традиционное блюдо национальной кухни. Изготавливается из жидкого теста, выпекаемого на раскаленной сковороде.`,
-          category: 'all',
-          date: '2026',
-        },
-      ]
-    }
+Example format:
+[Direct AI Answer Text Here]
 
-    setResults(searchItems)
-    setIsSearching(false)
-    fetchAiOverview(q, searchItems)
+---SOURCES---
+[
+  {
+    "title": "Заголовок страницы или рецепта",
+    "url": "https://example.com/page",
+    "domain": "example.com",
+    "snippet": "Краткое описание страницы или рецепта..."
   }
-
-  const fetchAiOverview = async (searchQuery: string, currentResults: SearchResultItem[]) => {
-    setAiSummaryLoading(true)
-    setAiSummary('')
-
-    const contextSnippets = currentResults.slice(0, 3).map((r) => `${r.title}: ${r.snippet}`).join('\n')
-    const systemPrompt = `You are Krakenus AI Search Core.
-The user searched for: "${searchQuery}"
-Generate a brilliant, ultra-useful, beautifully formatted AI Overview answer in ${lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'}.
-If it is a recipe or question, give clear 1-2-3 bullet points and key secrets. Keep it clean and direct.`
+]`
 
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -484,22 +386,93 @@ If it is a recipe or question, give clear 1-2-3 bullet points and key secrets. K
           model: MODEL_NAME,
           messages: [
             { role: 'system', content: systemPrompt },
-            { role: 'user', content: searchQuery },
+            { role: 'user', content: q },
           ],
           stream: false,
         }),
       })
 
+      const endTime = performance.now()
+      setSearchTime(((endTime - startTime) / 1000).toFixed(2))
+
       if (response.ok) {
         const data = await response.json()
-        const text = data.choices?.[0]?.message?.content || ''
-        setAiSummary(text)
+        const fullContent: string = data.choices?.[0]?.message?.content || ''
+
+        if (fullContent.includes('---SOURCES---')) {
+          const parts = fullContent.split('---SOURCES---')
+          const answerText = parts[0].trim()
+          const sourcesRaw = parts[1].trim()
+
+          setAiSummary(answerText)
+
+          try {
+            // Match JSON block inside markdown if wrapped in ```json
+            const jsonMatch = sourcesRaw.match(/\[[\s\S]*\]/)
+            if (jsonMatch) {
+              const parsed: any[] = JSON.parse(jsonMatch[0])
+              const formattedItems: SearchResultItem[] = parsed.map((item, idx) => ({
+                id: `ai-src-${idx}`,
+                title: item.title || item.domain || `Результат ${idx + 1}`,
+                url: item.url || `https://${item.domain || 'google.com'}`,
+                domain: item.domain || 'web.search',
+                snippet: item.snippet || 'Подробная информация по вашему запросу.',
+              }))
+              setResults(formattedItems)
+            } else {
+              setResults(getFallbackResults(q))
+            }
+          } catch (jsonErr) {
+            setResults(getFallbackResults(q))
+          }
+        } else {
+          setAiSummary(fullContent)
+          setResults(getFallbackResults(q))
+        }
+      } else {
+        setAiSummary(`Не удалось загрузить данные ИИ. Попробуйте еще раз.`)
+        setResults(getFallbackResults(q))
       }
     } catch (e) {
-      console.error('AI Overview error:', e)
+      console.error('Search error:', e)
+      setAiSummary(`Ошибка сети. Проверьте подключение.`)
+      setResults(getFallbackResults(q))
     } finally {
-      setAiSummaryLoading(false)
+      setIsSearching(false)
     }
+  }
+
+  const getFallbackResults = (q: string): SearchResultItem[] => {
+    return [
+      {
+        id: 'fallback-1',
+        title: `${q} — Подробный материал и руководство`,
+        url: `https://google.com/search?q=${encodeURIComponent(q)}`,
+        domain: 'google.com',
+        snippet: `Полная информация, пошаговые инструкции и проверенные советы по запросу "${q}".`,
+      },
+      {
+        id: 'fallback-2',
+        title: `Рецепты и статьи: ${q}`,
+        url: `https://eda.ru/recepty/search?q=${encodeURIComponent(q)}`,
+        domain: 'eda.ru',
+        snippet: `Лучшие проверенные рецепты и кулинарные хитрости приготовления со свежими фото.`,
+      },
+      {
+        id: 'fallback-3',
+        title: `Википедия — ${q}`,
+        url: `https://ru.wikipedia.org/wiki/${encodeURIComponent(q)}`,
+        domain: 'wikipedia.org',
+        snippet: `Материал из свободной энциклопедии: истории, классификации и подробные факты.`,
+      },
+      {
+        id: 'fallback-4',
+        title: `Видео по запросу: ${q}`,
+        url: `https://youtube.com/results?search_query=${encodeURIComponent(q)}`,
+        domain: 'youtube.com',
+        snippet: `Смотрите обучающие ролики, рецепты и обзоры в высоком качестве.`,
+      },
+    ]
   }
 
   const handleSendAiMessage = async (textToSend?: string) => {
@@ -558,137 +531,8 @@ If it is a recipe or question, give clear 1-2-3 bullet points and key secrets. K
     }
   }
 
-  const displayedResults = results.filter((r) => {
-    if (activeCategory === 'all') return true
-    return r.category === activeCategory
-  })
-
   return (
     <div className="search-app-root">
-      {/* HEADER NAVBAR */}
-      <header className={`site-header ${hasSearched ? 'site-header--compact' : ''}`}>
-        <a
-          href="/"
-          className="brand"
-          onClick={(e) => {
-            e.preventDefault()
-            setQuery('')
-            executeSearch('')
-          }}
-        >
-          <OctopusMark compact />
-          <span>OCTOPUS</span>
-          <sup className="search-sub-tag">SEARCH</sup>
-        </a>
-
-        {/* Top Search Bar when in Results Mode */}
-        {hasSearched && (
-          <form
-            className="top-header-search-form"
-            onSubmit={(e) => {
-              e.preventDefault()
-              executeSearch(query)
-            }}
-          >
-            <div className="top-search-wrapper">
-              <SearchIcon size={16} className="top-search-icon" />
-              <input
-                type="text"
-                className="top-search-input"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder={t.placeholder}
-              />
-              {query && (
-                <button
-                  type="button"
-                  className="search-clear-btn"
-                  onClick={() => {
-                    setQuery('')
-                    executeSearch('')
-                  }}
-                >
-                  <X size={14} />
-                </button>
-              )}
-              <button type="submit" className="top-search-btn">
-                <SearchIcon size={14} />
-              </button>
-            </div>
-          </form>
-        )}
-
-        <div className="header-actions-right">
-          <button
-            type="button"
-            className="ai-trigger-btn"
-            onClick={() => setAiModalOpen(true)}
-          >
-            <Bot size={15} />
-            <span>Krakenus AI</span>
-          </button>
-
-          <button
-            type="button"
-            className="lang-selector-btn"
-            onClick={() => setShowConfigModal(true)}
-            title="Google API Credentials"
-          >
-            <Settings size={14} />
-          </button>
-
-          <LanguageSelectorMenu currentLang={lang} onSelectLang={handleSetLang} />
-        </div>
-      </header>
-
-      {/* GOOGLE API CONFIG MODAL */}
-      {showConfigModal && (
-        <div className="ai-modal-backdrop" onClick={() => setShowConfigModal(false)}>
-          <div className="ai-modal-card" style={{ height: 'auto' }} onClick={(e) => e.stopPropagation()}>
-            <div className="ai-modal-header">
-              <div className="ai-title-group">
-                <Key size={20} style={{ color: 'var(--lime)' }} />
-                <h3>{t.googleApiConfig}</h3>
-              </div>
-              <button type="button" className="geo-close-btn" onClick={() => setShowConfigModal(false)}>
-                <X size={16} />
-              </button>
-            </div>
-
-            <p style={{ fontSize: '13px', color: 'rgba(243,240,231,0.8)', margin: '0 0 16px 0' }}>
-              {t.apiConfigNotice}
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <input
-                type="text"
-                className="ai-input-field"
-                placeholder={t.googleApiKeyPlaceholder}
-                value={googleApiKey}
-                onChange={(e) => setGoogleApiKey(e.target.value)}
-                style={{ padding: '12px', background: 'rgba(5, 14, 14, 0.95)', border: '1px solid rgba(243, 240, 231, 0.2)', borderRadius: '10px' }}
-              />
-              <input
-                type="text"
-                className="ai-input-field"
-                placeholder={t.googleCxPlaceholder}
-                value={googleCxKey}
-                onChange={(e) => setGoogleCxKey(e.target.value)}
-                style={{ padding: '12px', background: 'rgba(5, 14, 14, 0.95)', border: '1px solid rgba(243, 240, 231, 0.2)', borderRadius: '10px' }}
-              />
-              <button
-                type="button"
-                className="search-submit-btn"
-                onClick={handleSaveGoogleKeys}
-                style={{ width: '100%', justifyContent: 'center', marginTop: '8px' }}
-              >
-                {t.saveKeys}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* KRAKENUS AI ASSISTANT MODAL */}
       {aiModalOpen && (
         <div className="ai-modal-backdrop" onClick={() => setAiModalOpen(false)}>
@@ -790,62 +634,91 @@ If it is a recipe or question, give clear 1-2-3 bullet points and key secrets. K
         </div>
       )}
 
-      {/* STATE 1: CLEAN MINIMALIST HOME SEARCH PAGE (LIKE GOOGLE HOME) */}
+      {/* STATE 1: GOOGLE HOME UI DESIGN */}
       {!hasSearched ? (
-        <main className="search-hero-container hero-home-view">
-          <div className="search-brand-hero">
-            <div className="search-logo-circle">
-              <OctopusMark />
-            </div>
-            <h1>OCTOPUS <span>SEARCH</span></h1>
-            <span className="search-beta-badge">{t.badge}</span>
-            <p className="search-tagline">{t.tagline}</p>
-          </div>
+        <div className="google-home-layout">
+          {/* Top Bar Navigation */}
+          <header className="google-home-header">
+            <a href="https://octopus.dev" className="google-hub-link">
+              <span>{t.backToHub}</span>
+            </a>
 
-          <form
-            className="search-bar-form"
-            onSubmit={(e) => {
-              e.preventDefault()
-              executeSearch(query)
-            }}
-          >
-            <div className="search-input-wrapper">
-              <SearchIcon size={20} className="search-input-icon" />
-              <input
-                type="text"
-                className="main-search-input"
-                placeholder={t.placeholder}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                autoFocus
-              />
-              {query && (
+            <div className="google-header-actions">
+              <button
+                type="button"
+                className="ai-trigger-btn"
+                onClick={() => setAiModalOpen(true)}
+              >
+                <Bot size={15} />
+                <span>Krakenus AI</span>
+              </button>
+
+              <LanguageSelectorMenu currentLang={lang} onSelectLang={handleSetLang} />
+            </div>
+          </header>
+
+          {/* Centered Google Hero Section */}
+          <main className="google-home-center">
+            <div className="google-logo-wrapper">
+              <OctopusMark />
+              <h1 className="google-logo-text">OCTOPUS <span>SEARCH</span></h1>
+            </div>
+
+            <form
+              className="google-search-bar-form"
+              onSubmit={(e) => {
+                e.preventDefault()
+                executeAiSearch(query)
+              }}
+            >
+              <div className="google-search-input-pill">
+                <SearchIcon size={20} className="google-search-icon" />
+                <input
+                  type="text"
+                  className="google-main-input"
+                  placeholder={t.placeholder}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  autoFocus
+                />
+                {query && (
+                  <button
+                    type="button"
+                    className="google-clear-btn"
+                    onClick={() => setQuery('')}
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+
+              <div className="google-action-buttons">
+                <button type="submit" className="google-btn">
+                  {t.btnSearch}
+                </button>
                 <button
                   type="button"
-                  className="search-clear-btn"
-                  onClick={() => setQuery('')}
+                  className="google-btn"
+                  onClick={() => {
+                    const randomQuery = t.quickQueries[Math.floor(Math.random() * t.quickQueries.length)]
+                    setQuery(randomQuery)
+                    executeAiSearch(randomQuery)
+                  }}
                 >
-                  <X size={16} />
+                  {t.btnLucky}
                 </button>
-              )}
-              <button type="submit" className="search-submit-btn">
-                <span>{t.searchBtn}</span>
-                <ArrowRight size={16} />
-              </button>
-            </div>
-          </form>
+              </div>
+            </form>
 
-          <div className="search-quick-queries">
-            <span>{t.quickTitle}</span>
-            <div className="quick-query-chips">
+            <div className="google-quick-links">
               {t.quickQueries.map((q) => (
                 <button
                   key={q}
                   type="button"
-                  className="query-chip"
+                  className="google-chip-link"
                   onClick={() => {
                     setQuery(q)
-                    executeSearch(q)
+                    executeAiSearch(q)
                   }}
                 >
                   <SearchIcon size={12} />
@@ -853,121 +726,185 @@ If it is a recipe or question, give clear 1-2-3 bullet points and key secrets. K
                 </button>
               ))}
             </div>
-          </div>
-        </main>
+          </main>
+
+          {/* Google Footer Bar */}
+          <footer className="google-home-footer">
+            <div className="google-footer-row google-footer-location">
+              <MapPin size={13} />
+              <span>{t.footerLocation}</span>
+            </div>
+          </footer>
+        </div>
       ) : (
-        /* STATE 2: GOOGLE-STYLE SEARCH RESULTS PAGE */
-        <main className="search-results-page-view">
-          {/* CATEGORY FILTER TABS BAR */}
-          <div className="results-sub-header">
-            <div className="results-tab-container">
+        /* STATE 2: GOOGLE SEARCH RESULTS UI DESIGN */
+        <div className="google-results-layout">
+          {/* Top Google Results Header */}
+          <header className="google-results-header">
+            <a
+              href="/"
+              className="google-results-logo"
+              onClick={(e) => {
+                e.preventDefault()
+                setQuery('')
+                executeAiSearch('')
+              }}
+            >
+              <OctopusMark compact />
+              <span className="results-logo-text">OCTOPUS <span>SEARCH</span></span>
+            </a>
+
+            <form
+              className="google-top-search-form"
+              onSubmit={(e) => {
+                e.preventDefault()
+                executeAiSearch(query)
+              }}
+            >
+              <div className="google-top-pill">
+                <input
+                  type="text"
+                  className="google-top-input"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={t.placeholder}
+                />
+                {query && (
+                  <button
+                    type="button"
+                    className="google-clear-btn"
+                    onClick={() => {
+                      setQuery('')
+                      executeAiSearch('')
+                    }}
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+                <button type="submit" className="google-top-submit-icon">
+                  <SearchIcon size={16} />
+                </button>
+              </div>
+            </form>
+
+            <div className="google-top-actions">
               <button
                 type="button"
-                className={`category-tab ${activeCategory === 'all' ? 'is-active' : ''}`}
-                onClick={() => setActiveCategory('all')}
+                className="ai-trigger-btn"
+                onClick={() => setAiModalOpen(true)}
               >
-                <Filter size={14} />
-                <span>{t.filterAll}</span>
+                <Bot size={15} />
+                <span>Krakenus AI</span>
+              </button>
+
+              <LanguageSelectorMenu currentLang={lang} onSelectLang={handleSetLang} />
+            </div>
+          </header>
+
+          {/* Google Sub-Navigation Bar (Tabs: Все, Новости, Картинки, Видео) */}
+          <div className="google-tabs-bar">
+            <div className="google-tabs-container">
+              <button
+                type="button"
+                className={`google-tab ${activeTab === 'all' ? 'is-active' : ''}`}
+                onClick={() => setActiveTab('all')}
+              >
+                <SearchIcon size={14} />
+                <span>{t.tabAll}</span>
               </button>
               <button
                 type="button"
-                className={`category-tab ${activeCategory === 'news' ? 'is-active' : ''}`}
-                onClick={() => setActiveCategory('news')}
+                className={`google-tab ${activeTab === 'news' ? 'is-active' : ''}`}
+                onClick={() => setActiveTab('news')}
               >
                 <Newspaper size={14} />
-                <span>{t.filterNews}</span>
+                <span>{t.tabNews}</span>
               </button>
               <button
                 type="button"
-                className={`category-tab ${activeCategory === 'image' ? 'is-active' : ''}`}
-                onClick={() => setActiveCategory('image')}
+                className={`google-tab ${activeTab === 'images' ? 'is-active' : ''}`}
+                onClick={() => setActiveTab('images')}
               >
                 <ImageIcon size={14} />
-                <span>{t.filterImages}</span>
+                <span>{t.tabImages}</span>
               </button>
               <button
                 type="button"
-                className={`category-tab ${activeCategory === 'code' ? 'is-active' : ''}`}
-                onClick={() => setActiveCategory('code')}
+                className={`google-tab ${activeTab === 'videos' ? 'is-active' : ''}`}
+                onClick={() => setActiveTab('videos')}
               >
-                <Braces size={14} />
-                <span>{t.filterCode}</span>
+                <Video size={14} />
+                <span>{t.tabVideos}</span>
               </button>
             </div>
           </div>
 
-          <div className="search-results-content-area">
-            {/* GOOGLE-STYLE KRAKENUS AI OVERVIEW BOX WITH GLOW ANIMATION */}
-            {(aiSummary || aiSummaryLoading) && (
-              <div className="ai-overview-card animate-ai-box">
-                <div className="ai-overview-header">
-                  <div className="ai-sparkle-badge">
+          {/* Google Organic Search Results Area */}
+          <main className="google-results-main">
+            <div className="google-stats-line">
+              <span>{t.resultsCount} {results.length * 1420} ({searchTime} сек.)</span>
+            </div>
+
+            {/* GOOGLE AI OVERVIEW BOX */}
+            {(aiSummary || isSearching) && (
+              <div className="google-ai-overview-card">
+                <div className="google-ai-overview-header">
+                  <div className="google-ai-badge">
                     <Sparkles size={16} />
                   </div>
-                  <h4>{t.aiOverviewTitle}</h4>
+                  <h3>{t.aiOverviewTitle}</h3>
                 </div>
 
-                {aiSummaryLoading ? (
-                  <div className="ai-overview-loading">
+                {isSearching ? (
+                  <div className="google-ai-loading">
                     <span className="pulse-dot" />
                     <p>{t.aiGenerating}</p>
                   </div>
                 ) : (
-                  <div className="ai-overview-body">
+                  <div className="google-ai-body">
                     <FormattedAiText text={aiSummary} />
                   </div>
                 )}
               </div>
             )}
 
-            {/* RESULTS LIST */}
-            <div className="search-results-list">
-              <div className="results-count-bar">
-                <span>{t.resultsFound} <strong>{displayedResults.length}</strong></span>
-              </div>
-
-              {isSearching ? (
-                <div className="search-empty-state">
-                  <RefreshCw size={24} style={{ animation: 'spin 1s linear infinite', color: 'var(--coral)' }} />
-                  <p>Загрузка результатов Поиска Google...</p>
-                </div>
-              ) : displayedResults.length > 0 ? (
-                displayedResults.map((item) => (
-                  <article key={item.id} className="search-result-card">
-                    <div className="result-header-meta">
-                      <Globe2 size={14} className="domain-icon" />
-                      <span className="result-domain">{item.domain}</span>
-                      {item.date && <span className="result-date">• {item.date}</span>}
+            {/* ORGANIC GOOGLE SEARCH RESULTS LIST */}
+            <div className="google-organic-list">
+              {results.length > 0 ? (
+                results.map((item) => (
+                  <article key={item.id} className="google-result-item">
+                    <div className="google-cite-meta">
+                      <div className="google-favicon-circle">
+                        <Globe2 size={12} />
+                      </div>
+                      <div className="google-cite-text">
+                        <span className="google-site-name">{item.domain}</span>
+                        <span className="google-cite-url">{item.url}</span>
+                      </div>
                     </div>
-                    <h3 className="result-title">
+
+                    <h3 className="google-result-title">
                       <a href={item.url} target="_blank" rel="noopener noreferrer">
                         {item.title}
-                        <ExternalLink size={14} />
                       </a>
                     </h3>
-                    <p className="result-snippet">{item.snippet}</p>
 
-                    {item.imageUrl && (
-                      <div className="result-image-preview">
-                        <img src={item.imageUrl} alt={item.title} loading="lazy" />
-                      </div>
-                    )}
+                    <p className="google-result-snippet">{item.snippet}</p>
                   </article>
                 ))
-              ) : (
-                <div className="search-empty-state">
-                  <OctopusMark compact />
-                  <p>{t.noResults}</p>
+              ) : !isSearching ? (
+                <div className="google-no-results">
+                  <p>По вашему запросу ничего не найдено.</p>
                 </div>
-              )}
+              ) : null}
             </div>
 
-            <div className="search-footer-notice">
-              <Sparkles size={14} />
+            <div className="google-bottom-notice">
+              <Sparkles size={13} />
               <span>{t.searchSecNotice}</span>
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
       )}
     </div>
   )
