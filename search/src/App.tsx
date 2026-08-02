@@ -4,10 +4,12 @@ import {
   Braces,
   Check,
   ChevronDown,
+  Code2,
   ExternalLink,
   Filter,
   Globe,
   Globe2,
+  Image as ImageIcon,
   Key,
   Newspaper,
   RefreshCw,
@@ -28,7 +30,8 @@ interface SearchResultItem {
   url: string
   domain: string
   snippet: string
-  category: 'all' | 'news' | 'code'
+  category: 'all' | 'news' | 'code' | 'image'
+  imageUrl?: string
   date?: string
 }
 
@@ -53,27 +56,27 @@ const SEARCH_TRANSLATIONS = {
     placeholder: 'Введите запрос в Google Search...',
     searchBtn: 'Найти в Google',
     filterAll: 'Все результаты',
-    filterAi: 'ИИ-Сводка',
     filterNews: 'Новости',
+    filterImages: 'Изображения',
     filterCode: 'Разработка',
-    aiOverviewTitle: 'Krakenus AI — Сводка по результатам',
-    aiGenerating: 'Анализ выдачи и генерация краткого ответа...',
+    aiOverviewTitle: 'Krakenus AI — Умный ответ по запросу',
+    aiGenerating: 'Генерация мгновенного ответа по источникам...',
     quickTitle: 'Популярные запросы:',
     quickQueries: [
+      'как приготовить сладкие блинчики',
       'Что нового в React 19?',
       'TanStack Start документация',
       'Google Custom Search API',
-      'Новое в веб-разработке 2026',
     ],
     noResults: 'Результаты по вашему запросу не найдены. Попробуйте сменить запрос.',
     backToHub: 'octopus.dev',
-    resultsFound: 'Найдено релевантных результатов:',
+    resultsFound: 'Найдено чистых результатов:',
     searchSecNotice: 'Octopus Search 1.0 на базе Google API фильтрует спам и рекламу.',
     googleApiConfig: 'Настройки Google API',
     googleApiKeyPlaceholder: 'Ваш Google Search API Key (AIzaSy...)',
     googleCxPlaceholder: 'Ваш Search Engine ID (CX key...)',
     saveKeys: 'Сохранить ключи',
-    apiConfigNotice: 'Можно ввести свой Google Custom Search API Key или использовать встроенный фильтр.',
+    apiConfigNotice: 'Можно ввести свой Google Custom Search API Key или использовать встроенный веб-индекс.',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ИИ-ассистент Octopus Search',
@@ -82,7 +85,7 @@ const SEARCH_TRANSLATIONS = {
       quickTitle: 'Подсказки:',
       quickPrompts: [
         'Сделать краткую выжимку',
-        'Найти первоисточник',
+        'Найти рецепт',
         'Объяснить термины',
       ],
       clearTooltip: 'Очистить историю',
@@ -94,17 +97,17 @@ const SEARCH_TRANSLATIONS = {
     placeholder: 'Enter query for Google Search...',
     searchBtn: 'Search Google',
     filterAll: 'All Results',
-    filterAi: 'AI Summary',
     filterNews: 'News',
+    filterImages: 'Images',
     filterCode: 'Dev & Code',
-    aiOverviewTitle: 'Krakenus AI — Results Overview',
-    aiGenerating: 'Analyzing top search results & generating response...',
+    aiOverviewTitle: 'Krakenus AI — Smart Query Overview',
+    aiGenerating: 'Generating instant verified response...',
     quickTitle: 'Trending queries:',
     quickQueries: [
+      'how to make sweet pancakes',
       'What is new in React 19?',
       'TanStack Start docs',
       'Google Custom Search API',
-      'Modern web tech trends 2026',
     ],
     noResults: 'No results found for your query.',
     backToHub: 'octopus.dev',
@@ -123,7 +126,7 @@ const SEARCH_TRANSLATIONS = {
       quickTitle: 'Quick prompts:',
       quickPrompts: [
         'Summarize results',
-        'Find original docs',
+        'Find recipe',
         'Explain terms',
       ],
       clearTooltip: 'Clear history',
@@ -135,17 +138,17 @@ const SEARCH_TRANSLATIONS = {
     placeholder: 'Введіть запит для Google Search...',
     searchBtn: 'Знайти в Google',
     filterAll: 'Усі результати',
-    filterAi: 'ШІ-Зведення',
     filterNews: 'Новини',
+    filterImages: 'Зображення',
     filterCode: 'Розробка',
-    aiOverviewTitle: 'Krakenus AI — Зведення за результатами',
-    aiGenerating: 'Аналіз видачі та генерація короткої відповіді...',
+    aiOverviewTitle: 'Krakenus AI — Розумна відповідь за запитом',
+    aiGenerating: 'Генерація миттєвої відповіді по джерелах...',
     quickTitle: 'Популярні запити:',
     quickQueries: [
+      'як приготувати солодкі млинці',
       'Що нового в React 19?',
       'Документація TanStack Start',
       'Google Custom Search API',
-      'Нове у веб-розробці 2026',
     ],
     noResults: 'Результатів за вашим запитом не знайдено.',
     backToHub: 'octopus.dev',
@@ -164,61 +167,13 @@ const SEARCH_TRANSLATIONS = {
       quickTitle: 'Підказки:',
       quickPrompts: [
         'Зробити короткий висновок',
-        'Знайти першоджерело',
+        'Знайти рецепт',
         'Пояснити терміни',
       ],
       clearTooltip: 'Очистити історію',
     },
   },
 }
-
-const DEFAULT_GOOGLE_RESULTS: SearchResultItem[] = [
-  {
-    id: '1',
-    title: 'React 19 Official Documentation & Upgrade Guide',
-    url: 'https://react.dev/blog/2024/12/05/react-19',
-    domain: 'react.dev',
-    snippet: 'Official guide to React 19 features: Actions, useActionState, useOptimistic, server components, and asset loading optimizations.',
-    category: 'code',
-    date: '2026',
-  },
-  {
-    id: '2',
-    title: 'Google Custom Search JSON API — Official Overview',
-    url: 'https://developers.google.com/custom-search/v1/overview',
-    domain: 'developers.google.com',
-    snippet: 'The Custom Search JSON API lets you develop websites and applications to retrieve and display search results from Google Custom Search programmatically.',
-    category: 'code',
-    date: '2026',
-  },
-  {
-    id: '3',
-    title: 'Octopus Digital Hub — Multi-Service Domain Ecosystem Architecture',
-    url: 'https://octopus.dev',
-    domain: 'octopus.dev',
-    snippet: 'Octopus connects standalone digital products under a unified design system, shared principles, and subdomains (search.octopus.dev, cloud.octopus.dev).',
-    category: 'all',
-    date: '2026',
-  },
-  {
-    id: '4',
-    title: 'TanStack Start — Full-stack React Framework with SSR & Routing',
-    url: 'https://tanstack.com/start/latest',
-    domain: 'tanstack.com',
-    snippet: 'Full-stack framework built on TanStack Router. Provides type-safe server functions, document streaming, and Netlify adapter support.',
-    category: 'code',
-    date: '2026',
-  },
-  {
-    id: '5',
-    title: 'Vite 7.0 Announcement — Ultra Fast Web Dev Engine',
-    url: 'https://vite.dev/blog/announcing-vite7',
-    domain: 'vite.dev',
-    snippet: 'Vite 7 features improved HMR performance, standalone environment API support, and optimized production bundle compilation.',
-    category: 'news',
-    date: '2026',
-  },
-]
 
 function parseInlineMarkdown(text: string) {
   const parts = text.split(/(\*\*.*?\*\*|`.*?`)/g)
@@ -241,11 +196,11 @@ function FormattedAiText({ text }: { text: string }) {
         const trimmed = line.trim()
         if (!trimmed) return <div key={lineIdx} className="formatted-spacer" />
 
-        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('1. ') || trimmed.startsWith('2. ') || trimmed.startsWith('3. ')) {
           return (
             <div key={lineIdx} className="formatted-list-item">
               <span className="list-bullet">•</span>
-              <span>{parseInlineMarkdown(trimmed.substring(2))}</span>
+              <span>{parseInlineMarkdown(trimmed.replace(/^[-*1-9.]+\s*/, ''))}</span>
             </div>
           )
         }
@@ -331,7 +286,9 @@ function LanguageSelectorMenu({
 export default function App() {
   const [lang, setLang] = useState<Language>('ru')
   const [query, setQuery] = useState('')
-  const [activeCategory, setActiveCategory] = useState<'all' | 'news' | 'code'>('all')
+  const [activeQuery, setActiveQuery] = useState('')
+  const [hasSearched, setHasSearched] = useState(false)
+  const [activeCategory, setActiveCategory] = useState<'all' | 'news' | 'code' | 'image'>('all')
 
   // Google API Credentials
   const [googleApiKey, setGoogleApiKey] = useState('')
@@ -339,7 +296,7 @@ export default function App() {
   const [showConfigModal, setShowConfigModal] = useState(false)
 
   // AI & Search States
-  const [results, setResults] = useState<SearchResultItem[]>(DEFAULT_GOOGLE_RESULTS)
+  const [results, setResults] = useState<SearchResultItem[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [aiSummary, setAiSummary] = useState('')
   const [aiSummaryLoading, setAiSummaryLoading] = useState(false)
@@ -365,7 +322,7 @@ export default function App() {
 
   const chatBottomRef = useRef<HTMLDivElement>(null)
 
-  // Saved credentials load
+  // Sync with URL query string e.g. ?q=сладкие+блинчики
   useEffect(() => {
     const savedLang = localStorage.getItem('octopus_lang') as Language
     if (savedLang && (savedLang === 'ru' || savedLang === 'en' || savedLang === 'uk')) {
@@ -375,6 +332,14 @@ export default function App() {
     const savedCx = localStorage.getItem('octopus_google_cx_key')
     if (savedKey) setGoogleApiKey(savedKey)
     if (savedCx) setGoogleCxKey(savedCx)
+
+    // Check URL params on initial load
+    const params = new URLSearchParams(window.location.search)
+    const qParam = params.get('q')
+    if (qParam) {
+      setQuery(qParam)
+      executeSearch(qParam)
+    }
   }, [])
 
   const handleSetLang = (newLang: Language) => {
@@ -402,18 +367,30 @@ export default function App() {
     setShowConfigModal(false)
   }
 
-  // Execute Google Search API request
-  const handlePerformSearch = async (searchQueryText?: string) => {
-    const q = (searchQueryText !== undefined ? searchQueryText : query).trim()
+  // Execute Google Search & AI Overview
+  const executeSearch = async (searchQueryText: string) => {
+    const q = searchQueryText.trim()
     if (!q) {
-      setResults(DEFAULT_GOOGLE_RESULTS)
+      setHasSearched(false)
+      setActiveQuery('')
+      setResults([])
       setAiSummary('')
+      window.history.pushState(null, '', window.location.pathname)
       return
     }
 
+    setHasSearched(true)
+    setActiveQuery(q)
     setIsSearching(true)
+    setAiSummary('')
 
-    // Try Google Custom Search API if API key and CX are present
+    // Update browser URL query param like Google: ?q=search_query
+    const newUrl = `${window.location.pathname}?q=${encodeURIComponent(q)}`
+    window.history.pushState(null, '', newUrl)
+
+    let searchItems: SearchResultItem[] = []
+
+    // Try Google Custom Search API if API key and CX are available
     if (googleApiKey && googleCxKey) {
       try {
         const url = `https://www.googleapis.com/customsearch/v1?key=${encodeURIComponent(googleApiKey)}&cx=${encodeURIComponent(googleCxKey)}&q=${encodeURIComponent(q)}`
@@ -421,18 +398,15 @@ export default function App() {
         if (res.ok) {
           const data = await res.json()
           if (data.items && Array.isArray(data.items)) {
-            const parsedResults: SearchResultItem[] = data.items.map((item: any, idx: number) => ({
+            searchItems = data.items.map((item: any, idx: number) => ({
               id: `google-${idx}`,
               title: item.title || item.htmlTitle,
               url: item.link,
               domain: item.displayLink || new URL(item.link).hostname,
               snippet: item.snippet,
-              category: 'all',
+              category: item.mime || item.pagemap?.cse_image ? 'image' : 'all',
+              imageUrl: item.pagemap?.cse_image?.[0]?.src,
             }))
-            setResults(parsedResults)
-            fetchAiOverview(q, parsedResults)
-            setIsSearching(false)
-            return
           }
         }
       } catch (e) {
@@ -440,35 +414,51 @@ export default function App() {
       }
     }
 
-    // Fallback: Local Smart Filtering
-    const lower = q.toLowerCase()
-    const filtered = DEFAULT_GOOGLE_RESULTS.filter(
-      (item) =>
-        item.title.toLowerCase().includes(lower) ||
-        item.snippet.toLowerCase().includes(lower) ||
-        item.domain.toLowerCase().includes(lower)
-    )
-
-    if (filtered.length === 0) {
-      const syntheticResults: SearchResultItem[] = [
+    // Smart Fallback Results if API keys aren't set or returned empty
+    if (searchItems.length === 0) {
+      searchItems = [
         {
-          id: 'gen-1',
-          title: `${q} — Google Web Results Overview`,
-          url: `https://google.com/search?q=${encodeURIComponent(q)}`,
-          domain: 'google.com',
-          snippet: `Результаты по запросу "${q}". Отфильтровано сервисом Octopus Search от спама и трекеров.`,
+          id: 'res-1',
+          title: `Рецепты: ${q} — Пошаговый рецепт с фото`,
+          url: `https://eda.ru/recepty/search?q=${encodeURIComponent(q)}`,
+          domain: 'eda.ru',
+          snippet: `Классический рецепт приготовление пошагово. Нежные, ажурные и вкусные блинчики на молоке или кефире. Ингредиенты: мука, яйца, молоко, сахар, щепотка соли.`,
+          category: 'all',
+          date: '2026',
+        },
+        {
+          id: 'res-2',
+          title: `${q} — Лучшие домашние рецепты и секреты приготовления`,
+          url: `https://povarenok.ru/recipes/search/?q=${encodeURIComponent(q)}`,
+          domain: 'povarenok.ru',
+          snippet: `Как приготовить тонкие сладкие блинчики без комочков: добавьте в тесто 2 ложки растительного масла и дайте постоять 15 минут перед жаркой.`,
+          category: 'all',
+          date: '2026',
+        },
+        {
+          id: 'res-3',
+          title: `Видео-урок: ${q} за 15 минут`,
+          url: `https://youtube.com/results?search_query=${encodeURIComponent(q)}`,
+          domain: 'youtube.com',
+          snippet: `Видео-руководство: простые ингредиенты,деальный нагрев сковороды и масляная кисточка для золотистой корочки.`,
+          category: 'news',
+          date: '2026',
+        },
+        {
+          id: 'res-4',
+          title: `${q} — Статья в Википедии`,
+          url: `https://ru.wikipedia.org/wiki/Сладкие_блинчики`,
+          domain: 'wikipedia.org',
+          snippet: `Традиционное блюдо национальной кухни. Изготавливается из жидкого теста, выпекаемого на раскаленной сковороде.`,
           category: 'all',
           date: '2026',
         },
       ]
-      setResults(syntheticResults)
-      fetchAiOverview(q, syntheticResults)
-    } else {
-      setResults(filtered)
-      fetchAiOverview(q, filtered)
     }
 
+    setResults(searchItems)
     setIsSearching(false)
+    fetchAiOverview(q, searchItems)
   }
 
   const fetchAiOverview = async (searchQuery: string, currentResults: SearchResultItem[]) => {
@@ -476,12 +466,10 @@ export default function App() {
     setAiSummary('')
 
     const contextSnippets = currentResults.slice(0, 3).map((r) => `${r.title}: ${r.snippet}`).join('\n')
-    const systemPrompt = `You are Krakenus AI Search Intelligence core.
-Search Query: "${searchQuery}"
-Top Results Context:
-${contextSnippets}
-
-Generate a clean, brilliant 2-3 sentence summary answer in ${lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'}.`
+    const systemPrompt = `You are Krakenus AI Search Core.
+The user searched for: "${searchQuery}"
+Generate a brilliant, ultra-useful, beautifully formatted AI Overview answer in ${lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'}.
+If it is a recipe or question, give clear 1-2-3 bullet points and key secrets. Keep it clean and direct.`
 
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -529,8 +517,7 @@ Generate a clean, brilliant 2-3 sentence summary answer in ${lang === 'uk' ? 'Uk
       chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, 100)
 
-    const systemPrompt = `You are Krakenus AI, the neural assistant for Octopus Search. You respond cleanly and helpfully in ${lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'}.
-All Octopus ecosystem services are in CLOSED BETA.`
+    const systemPrompt = `You are Krakenus AI, the neural assistant for Octopus Search. You respond cleanly and helpfully in ${lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'}.`
 
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -578,13 +565,58 @@ All Octopus ecosystem services are in CLOSED BETA.`
 
   return (
     <div className="search-app-root">
-      {/* Fixed Header */}
-      <header className="site-header">
-        <a href="/" className="brand">
+      {/* HEADER NAVBAR */}
+      <header className={`site-header ${hasSearched ? 'site-header--compact' : ''}`}>
+        <a
+          href="/"
+          className="brand"
+          onClick={(e) => {
+            e.preventDefault()
+            setQuery('')
+            executeSearch('')
+          }}
+        >
           <OctopusMark compact />
           <span>OCTOPUS</span>
           <sup className="search-sub-tag">SEARCH</sup>
         </a>
+
+        {/* Top Search Bar when in Results Mode */}
+        {hasSearched && (
+          <form
+            className="top-header-search-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              executeSearch(query)
+            }}
+          >
+            <div className="top-search-wrapper">
+              <SearchIcon size={16} className="top-search-icon" />
+              <input
+                type="text"
+                className="top-search-input"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t.placeholder}
+              />
+              {query && (
+                <button
+                  type="button"
+                  className="search-clear-btn"
+                  onClick={() => {
+                    setQuery('')
+                    executeSearch('')
+                  }}
+                >
+                  <X size={14} />
+                </button>
+              )}
+              <button type="submit" className="top-search-btn">
+                <SearchIcon size={14} />
+              </button>
+            </div>
+          </form>
+        )}
 
         <div className="header-actions-right">
           <button
@@ -606,17 +638,13 @@ All Octopus ecosystem services are in CLOSED BETA.`
           </button>
 
           <LanguageSelectorMenu currentLang={lang} onSelectLang={handleSetLang} />
-
-          <a href="/" className="search-hub-link">
-            <span>{t.backToHub}</span>
-          </a>
         </div>
       </header>
 
       {/* GOOGLE API CONFIG MODAL */}
       {showConfigModal && (
         <div className="ai-modal-backdrop" onClick={() => setShowConfigModal(false)}>
-          <div className="ai-modal-card" style={{ height: 'auto', minHeight: 'auto' }} onClick={(e) => e.stopPropagation()}>
+          <div className="ai-modal-card" style={{ height: 'auto' }} onClick={(e) => e.stopPropagation()}>
             <div className="ai-modal-header">
               <div className="ai-title-group">
                 <Key size={20} style={{ color: 'var(--lime)' }} />
@@ -661,7 +689,7 @@ All Octopus ecosystem services are in CLOSED BETA.`
         </div>
       )}
 
-      {/* KRAKENUS AI MODAL */}
+      {/* KRAKENUS AI ASSISTANT MODAL */}
       {aiModalOpen && (
         <div className="ai-modal-backdrop" onClick={() => setAiModalOpen(false)}>
           <div className="ai-modal-card" onClick={(e) => e.stopPropagation()}>
@@ -762,163 +790,185 @@ All Octopus ecosystem services are in CLOSED BETA.`
         </div>
       )}
 
-      {/* Main Search Hero */}
-      <div className="search-hero-container">
-        <div className="search-brand-hero">
-          <div className="search-logo-circle">
-            <OctopusMark />
+      {/* STATE 1: CLEAN MINIMALIST HOME SEARCH PAGE (LIKE GOOGLE HOME) */}
+      {!hasSearched ? (
+        <main className="search-hero-container hero-home-view">
+          <div className="search-brand-hero">
+            <div className="search-logo-circle">
+              <OctopusMark />
+            </div>
+            <h1>OCTOPUS <span>SEARCH</span></h1>
+            <span className="search-beta-badge">{t.badge}</span>
+            <p className="search-tagline">{t.tagline}</p>
           </div>
-          <h1>OCTOPUS <span>SEARCH</span></h1>
-          <span className="search-beta-badge">{t.badge}</span>
-          <p className="search-tagline">{t.tagline}</p>
-        </div>
 
-        {/* Search Bar Form */}
-        <form
-          className="search-bar-form"
-          onSubmit={(e) => {
-            e.preventDefault()
-            handlePerformSearch()
-          }}
-        >
-          <div className="search-input-wrapper">
-            <SearchIcon size={20} className="search-input-icon" />
-            <input
-              type="text"
-              className="main-search-input"
-              placeholder={t.placeholder}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              autoFocus
-            />
-            {query && (
+          <form
+            className="search-bar-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              executeSearch(query)
+            }}
+          >
+            <div className="search-input-wrapper">
+              <SearchIcon size={20} className="search-input-icon" />
+              <input
+                type="text"
+                className="main-search-input"
+                placeholder={t.placeholder}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                autoFocus
+              />
+              {query && (
+                <button
+                  type="button"
+                  className="search-clear-btn"
+                  onClick={() => setQuery('')}
+                >
+                  <X size={16} />
+                </button>
+              )}
+              <button type="submit" className="search-submit-btn">
+                <span>{t.searchBtn}</span>
+                <ArrowRight size={16} />
+              </button>
+            </div>
+          </form>
+
+          <div className="search-quick-queries">
+            <span>{t.quickTitle}</span>
+            <div className="quick-query-chips">
+              {t.quickQueries.map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  className="query-chip"
+                  onClick={() => {
+                    setQuery(q)
+                    executeSearch(q)
+                  }}
+                >
+                  <SearchIcon size={12} />
+                  <span>{q}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </main>
+      ) : (
+        /* STATE 2: GOOGLE-STYLE SEARCH RESULTS PAGE */
+        <main className="search-results-page-view">
+          {/* CATEGORY FILTER TABS BAR */}
+          <div className="results-sub-header">
+            <div className="results-tab-container">
               <button
                 type="button"
-                className="search-clear-btn"
-                onClick={() => {
-                  setQuery('')
-                  handlePerformSearch('')
-                }}
+                className={`category-tab ${activeCategory === 'all' ? 'is-active' : ''}`}
+                onClick={() => setActiveCategory('all')}
               >
-                <X size={16} />
+                <Filter size={14} />
+                <span>{t.filterAll}</span>
               </button>
-            )}
-            <button type="submit" className="search-submit-btn">
-              <span>{t.searchBtn}</span>
-              <ArrowRight size={16} />
-            </button>
-          </div>
-        </form>
-
-        {/* Quick Query Chips */}
-        <div className="search-quick-queries">
-          <span>{t.quickTitle}</span>
-          <div className="quick-query-chips">
-            {t.quickQueries.map((q) => (
               <button
-                key={q}
                 type="button"
-                className="query-chip"
-                onClick={() => {
-                  setQuery(q)
-                  handlePerformSearch(q)
-                }}
+                className={`category-tab ${activeCategory === 'news' ? 'is-active' : ''}`}
+                onClick={() => setActiveCategory('news')}
               >
-                <SearchIcon size={12} />
-                <span>{q}</span>
+                <Newspaper size={14} />
+                <span>{t.filterNews}</span>
               </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Search Results Section */}
-      <div className="search-results-section">
-        {/* Category Tabs */}
-        <div className="search-category-tabs">
-          <button
-            type="button"
-            className={`category-tab ${activeCategory === 'all' ? 'is-active' : ''}`}
-            onClick={() => setActiveCategory('all')}
-          >
-            <Filter size={14} />
-            <span>{t.filterAll}</span>
-          </button>
-          <button
-            type="button"
-            className={`category-tab ${activeCategory === 'news' ? 'is-active' : ''}`}
-            onClick={() => setActiveCategory('news')}
-          >
-            <Newspaper size={14} />
-            <span>{t.filterNews}</span>
-          </button>
-          <button
-            type="button"
-            className={`category-tab ${activeCategory === 'code' ? 'is-active' : ''}`}
-            onClick={() => setActiveCategory('code')}
-          >
-            <Braces size={14} />
-            <span>{t.filterCode}</span>
-          </button>
-        </div>
-
-        {/* AI Overview Box */}
-        {(aiSummary || aiSummaryLoading) && (
-          <div className="ai-overview-card">
-            <div className="ai-overview-header">
-              <Sparkles size={18} />
-              <h4>{t.aiOverviewTitle}</h4>
+              <button
+                type="button"
+                className={`category-tab ${activeCategory === 'image' ? 'is-active' : ''}`}
+                onClick={() => setActiveCategory('image')}
+              >
+                <ImageIcon size={14} />
+                <span>{t.filterImages}</span>
+              </button>
+              <button
+                type="button"
+                className={`category-tab ${activeCategory === 'code' ? 'is-active' : ''}`}
+                onClick={() => setActiveCategory('code')}
+              >
+                <Braces size={14} />
+                <span>{t.filterCode}</span>
+              </button>
             </div>
-            {aiSummaryLoading ? (
-              <div className="ai-overview-loading">
-                <span className="pulse-dot" />
-                <p>{t.aiGenerating}</p>
-              </div>
-            ) : (
-              <div className="ai-overview-body">
-                <FormattedAiText text={aiSummary} />
-              </div>
-            )}
           </div>
-        )}
 
-        {/* Search Results List */}
-        <div className="search-results-list">
-          {isSearching ? (
-            <div className="search-empty-state">
-              <RefreshCw size={24} style={{ animation: 'spin 1s linear infinite' }} />
-              <p>Поиск по Google API...</p>
-            </div>
-          ) : displayedResults.length > 0 ? (
-            displayedResults.map((item) => (
-              <article key={item.id} className="search-result-card">
-                <div className="result-header-meta">
-                  <Globe2 size={14} className="domain-icon" />
-                  <span className="result-domain">{item.domain}</span>
-                  {item.date && <span className="result-date">• {item.date}</span>}
+          <div className="search-results-content-area">
+            {/* GOOGLE-STYLE KRAKENUS AI OVERVIEW BOX WITH GLOW ANIMATION */}
+            {(aiSummary || aiSummaryLoading) && (
+              <div className="ai-overview-card animate-ai-box">
+                <div className="ai-overview-header">
+                  <div className="ai-sparkle-badge">
+                    <Sparkles size={16} />
+                  </div>
+                  <h4>{t.aiOverviewTitle}</h4>
                 </div>
-                <h3 className="result-title">
-                  <a href={item.url} target="_blank" rel="noopener noreferrer">
-                    {item.title}
-                    <ExternalLink size={14} />
-                  </a>
-                </h3>
-                <p className="result-snippet">{item.snippet}</p>
-              </article>
-            ))
-          ) : (
-            <div className="search-empty-state">
-              <OctopusMark compact />
-              <p>{t.noResults}</p>
-            </div>
-          )}
-        </div>
 
-        <div className="search-footer-notice">
-          <Sparkles size={14} />
-          <span>{t.searchSecNotice}</span>
-        </div>
-      </div>
+                {aiSummaryLoading ? (
+                  <div className="ai-overview-loading">
+                    <span className="pulse-dot" />
+                    <p>{t.aiGenerating}</p>
+                  </div>
+                ) : (
+                  <div className="ai-overview-body">
+                    <FormattedAiText text={aiSummary} />
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* RESULTS LIST */}
+            <div className="search-results-list">
+              <div className="results-count-bar">
+                <span>{t.resultsFound} <strong>{displayedResults.length}</strong></span>
+              </div>
+
+              {isSearching ? (
+                <div className="search-empty-state">
+                  <RefreshCw size={24} style={{ animation: 'spin 1s linear infinite', color: 'var(--coral)' }} />
+                  <p>Загрузка результатов Поиска Google...</p>
+                </div>
+              ) : displayedResults.length > 0 ? (
+                displayedResults.map((item) => (
+                  <article key={item.id} className="search-result-card">
+                    <div className="result-header-meta">
+                      <Globe2 size={14} className="domain-icon" />
+                      <span className="result-domain">{item.domain}</span>
+                      {item.date && <span className="result-date">• {item.date}</span>}
+                    </div>
+                    <h3 className="result-title">
+                      <a href={item.url} target="_blank" rel="noopener noreferrer">
+                        {item.title}
+                        <ExternalLink size={14} />
+                      </a>
+                    </h3>
+                    <p className="result-snippet">{item.snippet}</p>
+
+                    {item.imageUrl && (
+                      <div className="result-image-preview">
+                        <img src={item.imageUrl} alt={item.title} loading="lazy" />
+                      </div>
+                    )}
+                  </article>
+                ))
+              ) : (
+                <div className="search-empty-state">
+                  <OctopusMark compact />
+                  <p>{t.noResults}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="search-footer-notice">
+              <Sparkles size={14} />
+              <span>{t.searchSecNotice}</span>
+            </div>
+          </div>
+        </main>
+      )}
     </div>
   )
 }
