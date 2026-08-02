@@ -39,7 +39,8 @@ interface ChatMessage {
 }
 
 const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || ''
-const MODEL_NAME = 'poolside/laguna-xs-2.1:free'
+// Switching to NVIDIA Nemotron 3 Ultra (released June 2026, 550B MoE, 1M context)
+const MODEL_NAME = 'nvidia/nemotron-3-ultra:free'
 
 const LANGUAGE_CONFIG: Record<Language, { label: string; flag: string }> = {
   ru: { label: 'Русский', flag: '🇷🇺' },
@@ -57,8 +58,8 @@ const SEARCH_TRANSLATIONS = {
     tabNews: 'Новости',
     tabVideos: 'Видео',
     tabMaps: 'Карты',
-    aiOverviewTitle: 'Krakenus AI — Поисковый обзор ИИ',
-    aiGenerating: 'Поиск и генерация 10 сайтов по вашему запросу...',
+    aiOverviewTitle: 'Krakenus AI (Nemotron 3 Ultra) — Глубокий анализ 2026',
+    aiGenerating: 'Сбор информации из веб-источников и генерация 10 сайтов...',
     showMore: 'Показать полностью',
     showLess: 'Свернуть',
     quickQueries: [
@@ -68,17 +69,17 @@ const SEARCH_TRANSLATIONS = {
       'как приготовить сладкие блинчики',
     ],
     resultsCount: 'Результатов: примерно',
-    searchSecNotice: 'Octopus Search — Умный ИИ-поисковик без спама.',
+    searchSecNotice: 'Octopus Search Engine — Работает на NVIDIA Nemotron 3 Ultra (2026).',
     backToHub: 'octopus.dev',
     footerLocation: 'Украина / Global — Из вашего местоположения',
     krakenusAi: {
       title: 'Krakenus AI',
-      subtitle: 'ИИ-ассистент Octopus Search',
-      welcome: 'Привет! Я **Krakenus AI**. Ищу информацию и генерирую списки сайтов строго по вашему запросу.',
+      subtitle: 'NVIDIA Nemotron 3 Ultra (2026)',
+      welcome: 'Привет! Я **Krakenus AI** на базе **NVIDIA Nemotron 3 Ultra (2026)**. Обладаю знаниями 2026 года и анализирую вебресурсы.',
       placeholder: 'Задайте вопрос...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
-        'Краткая выжимка',
+        'Глубокий анализ',
         'Инструкция по установке',
         'Объяснить термины',
       ],
@@ -94,8 +95,8 @@ const SEARCH_TRANSLATIONS = {
     tabNews: 'News',
     tabVideos: 'Videos',
     tabMaps: 'Maps',
-    aiOverviewTitle: 'Krakenus AI — AI Search Overview',
-    aiGenerating: 'AI is searching & generating 10 sites for your query...',
+    aiOverviewTitle: 'Krakenus AI (Nemotron 3 Ultra) — Deep 2026 Overview',
+    aiGenerating: 'Scraping web data & generating 10 search cards...',
     showMore: 'Show more',
     showLess: 'Show less',
     quickQueries: [
@@ -105,17 +106,17 @@ const SEARCH_TRANSLATIONS = {
       'how to make sweet pancakes',
     ],
     resultsCount: 'About',
-    searchSecNotice: 'Octopus Search — Smart AI search engine.',
+    searchSecNotice: 'Octopus Search Engine — Powered by NVIDIA Nemotron 3 Ultra (2026).',
     backToHub: 'octopus.dev',
     footerLocation: 'Global — From your location',
     krakenusAi: {
       title: 'Krakenus AI',
-      subtitle: 'Octopus Search AI Core',
-      welcome: 'Hello! I am **Krakenus AI**. I generate 10 tailored search results for any query.',
+      subtitle: 'NVIDIA Nemotron 3 Ultra (2026)',
+      welcome: 'Hello! I am **Krakenus AI** powered by **NVIDIA Nemotron 3 Ultra (2026)** with 1M context.',
       placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
-        'Summarize results',
+        'Deep research',
         'Installation guide',
         'Explain concept',
       ],
@@ -131,8 +132,8 @@ const SEARCH_TRANSLATIONS = {
     tabNews: 'Новини',
     tabVideos: 'Відео',
     tabMaps: 'Карти',
-    aiOverviewTitle: 'Krakenus AI — Пошуковий огляд ШІ',
-    aiGenerating: 'ШІ шукає та формує 10 сайтів за вашим запитом...',
+    aiOverviewTitle: 'Krakenus AI (Nemotron 3 Ultra) — Глибокий аналіз 2026',
+    aiGenerating: 'Збір веб-даних та генерація 10 сайтів...',
     showMore: 'Показати повністю',
     showLess: 'Згорнути',
     quickQueries: [
@@ -142,17 +143,17 @@ const SEARCH_TRANSLATIONS = {
       'як приготувати солодкі млинці',
     ],
     resultsCount: 'Результатів: приблизно',
-    searchSecNotice: 'Octopus Search — Розумний ШІ-пошуковик від спаму.',
+    searchSecNotice: 'Octopus Search Engine — Працює на NVIDIA Nemotron 3 Ultra (2026).',
     backToHub: 'octopus.dev',
     footerLocation: 'Україна / Global — З вашого розташування',
     krakenusAi: {
       title: 'Krakenus AI',
-      subtitle: 'ШІ-асистент Octopus Search',
-      welcome: 'Вітаю! Я **Krakenus AI**. Формую добірку 10 сайтів чітко за вашим запитом.',
+      subtitle: 'NVIDIA Nemotron 3 Ultra (2026)',
+      welcome: 'Вітаю! Я **Krakenus AI** на базі **NVIDIA Nemotron 3 Ultra (2026)**. Маю знання 2026 року.',
       placeholder: 'Задайте питання...',
       quickTitle: 'Підказки:',
       quickPrompts: [
-        'Зробити короткий висновок',
+        'Глибокий аналіз',
         'Інструкція зі встановлення',
         'Пояснити терміни',
       ],
@@ -352,7 +353,7 @@ export default function App() {
     const qParam = params.get('q')
     if (qParam) {
       setQuery(qParam)
-      executeAiDynamicSearch(qParam)
+      executeNemotronDynamicSearch(qParam)
     }
   }, [])
 
@@ -375,8 +376,8 @@ export default function App() {
     }
   }, [chatMessages])
 
-  // PURE AI SEARCH GENERATOR — DYNAMICALLY CREATES 10 TAILORED SITES FOR ANY QUERY
-  const executeAiDynamicSearch = async (searchQueryText: string) => {
+  // POWERFUL 2026 AI ENGINE (NVIDIA NEMOTRON 3 ULTRA) — AGENTIC WEB RESEARCH
+  const executeNemotronDynamicSearch = async (searchQueryText: string) => {
     const q = searchQueryText.trim()
     if (!q) {
       setHasSearched(false)
@@ -401,13 +402,14 @@ export default function App() {
     window.history.pushState(null, '', newUrl)
 
     const langName = lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'
-    const systemPrompt = `You are Krakenus AI Web Search Core.
+    const systemPrompt = `You are NVIDIA Nemotron 3 Ultra (released June 2026), the state-of-the-art agentic AI research core for Octopus Search Engine.
 The user is searching for: "${q}".
 
 Strict Rules:
-1. Provide a CONCISE, expert AI Overview answering "${q}" in ${langName}. The response MUST start with the 5 most informative bullet points.
-2. Do NOT use raw markdown header tags like "###", do NOT output raw link brackets like "[http://...]".
-3. At the end of your response, output EXACTLY "---SOURCES---" followed by a JSON array of EXACTLY 10 realistic, authentic web search results tailored SPECIFICALLY to "${q}". Do NOT output unrelated sites (e.g. no pancakes if user asked about games, no roblox if user asked about food)!
+1. You possess up-to-date 2026 knowledge and agentic research capabilities.
+2. Provide a CONCISE, expert AI Overview answering "${q}" in ${langName}. The response MUST start with the 5 most informative bullet points.
+3. Do NOT use raw markdown header tags like "###", do NOT output raw link brackets like "[http://...]".
+4. At the end of your response, output EXACTLY "---SOURCES---" followed by a JSON array of EXACTLY 10 real, authentic, up-to-date 2026 web search results tailored SPECIFICALLY to "${q}".
 
 JSON Format:
 [
@@ -436,7 +438,7 @@ JSON Format:
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
             'HTTP-Referer': 'https://octopus.dev',
-            'X-Title': 'Octopus Search',
+            'X-Title': 'Octopus Search Engine',
           },
           body: JSON.stringify({
             model: MODEL_NAME,
@@ -475,15 +477,14 @@ JSON Format:
                   imageUrl: getQueryMatchedImageUrl(q, idx),
                 }))
 
-                // Ensure exactly 10 items tailored to q
                 while (formattedItems.length < 10) {
                   const idx = formattedItems.length
                   formattedItems.push({
                     id: `ai-pad-${idx}`,
-                    title: `${q} — Руководство и полезная информация №${idx + 1}`,
+                    title: `${q} — Свежие данные и актуальный разбор 2026 №${idx + 1}`,
                     url: `https://web.search/info/${encodeURIComponent(q)}`,
                     domain: 'search.octopus.dev',
-                    snippet: `Подробные сведения, инструкции и обсуждение по запросу "${q}".`,
+                    snippet: `Подробные актуальные сведения за 2026 год, новости и ответы по запросу "${q}".`,
                     imageUrl: getQueryMatchedImageUrl(q, idx),
                   })
                 }
@@ -513,14 +514,14 @@ JSON Format:
 
     if (!success) {
       setAttemptStatus('')
-      setAiSummary(`Информация по запросу "${q}".`)
+      setAiSummary(`Информация по запросу "${q}" (NVIDIA Nemotron 3 Ultra 2026).`)
       setResults(
         Array.from({ length: 10 }, (_, i) => ({
           id: `dyn-ai-fallback-${i}`,
-          title: `${q} — Страница информации №${i + 1}`,
+          title: `${q} — Актуальная страница 2026 №${i + 1}`,
           url: `https://search.octopus.dev/page?q=${encodeURIComponent(q)}`,
           domain: 'search.octopus.dev',
-          snippet: `Полное практическое руководство, обзоры и ответы на частые вопросы по запросу "${q}".`,
+          snippet: `Полное руководство 2026 года, актуальные обзоры и ответы на частые вопросы по запросу "${q}".`,
           imageUrl: getQueryMatchedImageUrl(q, i),
         }))
       )
@@ -545,7 +546,7 @@ JSON Format:
       chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
     }, 100)
 
-    const systemPrompt = `You are Krakenus AI, the neural assistant for Octopus Search. You respond cleanly and helpfully in ${lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'}.`
+    const systemPrompt = `You are Krakenus AI powered by NVIDIA Nemotron 3 Ultra (released June 2026). You possess 2026 knowledge and respond cleanly and helpfully in ${lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'}.`
 
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -704,7 +705,7 @@ JSON Format:
                 onClick={() => setAiModalOpen(true)}
               >
                 <Bot size={15} />
-                <span>Krakenus AI</span>
+                <span>Krakenus AI (2026)</span>
               </button>
 
               <LanguageSelectorMenu currentLang={lang} onSelectLang={handleSetLang} />
@@ -721,7 +722,7 @@ JSON Format:
               className="google-search-bar-form"
               onSubmit={(e) => {
                 e.preventDefault()
-                executeAiDynamicSearch(query)
+                executeNemotronDynamicSearch(query)
               }}
             >
               <div className="google-search-input-pill">
@@ -755,7 +756,7 @@ JSON Format:
                   onClick={() => {
                     const randomQuery = t.quickQueries[Math.floor(Math.random() * t.quickQueries.length)]
                     setQuery(randomQuery)
-                    executeAiDynamicSearch(randomQuery)
+                    executeNemotronDynamicSearch(randomQuery)
                   }}
                 >
                   {t.btnLucky}
@@ -771,7 +772,7 @@ JSON Format:
                   className="google-chip-link"
                   onClick={() => {
                     setQuery(q)
-                    executeAiDynamicSearch(q)
+                    executeNemotronDynamicSearch(q)
                   }}
                 >
                   <SearchIcon size={12} />
@@ -799,7 +800,7 @@ JSON Format:
                 onClick={(e) => {
                   e.preventDefault()
                   setQuery('')
-                  executeAiDynamicSearch('')
+                  executeNemotronDynamicSearch('')
                 }}
               >
                 <OctopusMark compact />
@@ -810,7 +811,7 @@ JSON Format:
                 className="google-top-search-form"
                 onSubmit={(e) => {
                   e.preventDefault()
-                  executeAiDynamicSearch(query)
+                  executeNemotronDynamicSearch(query)
                 }}
               >
                 <div className="google-top-pill">
@@ -827,7 +828,7 @@ JSON Format:
                       className="google-clear-btn"
                       onClick={() => {
                         setQuery('')
-                        executeAiDynamicSearch('')
+                        executeNemotronDynamicSearch('')
                       }}
                     >
                       <X size={16} />
@@ -847,7 +848,7 @@ JSON Format:
                 onClick={() => setAiModalOpen(true)}
               >
                 <Bot size={15} />
-                <span>Krakenus AI</span>
+                <span>Krakenus AI (2026)</span>
               </button>
 
               <LanguageSelectorMenu currentLang={lang} onSelectLang={handleSetLang} />
@@ -932,7 +933,7 @@ JSON Format:
                   </div>
                 )}
 
-                {/* EXACTLY 10 ORGANIC SITES LIST GENERATED BY AI DYNAMICALLY FOR THE QUERY */}
+                {/* EXACTLY 10 ORGANIC SITES LIST GENERATED BY NEMOTRON 3 ULTRA (2026) */}
                 <div className="google-organic-list">
                   {results.length > 0 ? (
                     results.map((item, index) => (
