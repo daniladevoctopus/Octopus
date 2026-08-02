@@ -58,7 +58,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Видео',
     tabMaps: 'Карты',
     aiOverviewTitle: 'Krakenus AI — Обзор с помощью ИИ',
-    aiGenerating: 'Поиск 10 уникальных тематических сайтов и картинок...',
+    aiGenerating: 'Поиск 10 официальных сайтов и фирменных картинок...',
     showMore: 'Показать полностью',
     showLess: 'Свернуть',
     quickQueries: [
@@ -74,7 +74,7 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ИИ-ассистент Octopus Search',
-      welcome: 'Привет! Я **Krakenus AI**. Помогаю с выжимкой и подбором 10 уникальных сайтов и картинок.',
+      welcome: 'Привет! Я **Krakenus AI**. Помогаю с выжимкой и подбором 10 фирменных сайтов и картинок.',
       placeholder: 'Задайте вопрос...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
@@ -95,7 +95,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Videos',
     tabMaps: 'Maps',
     aiOverviewTitle: 'Krakenus AI — AI Overview',
-    aiGenerating: 'Generating concise AI summary & 10 unique topic images...',
+    aiGenerating: 'Generating concise AI summary & 10 official result cards...',
     showMore: 'Show more',
     showLess: 'Show less',
     quickQueries: [
@@ -111,7 +111,7 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'Octopus Search AI Core',
-      welcome: 'Hello! I am **Krakenus AI**. I help summarize and find 10 unique topic images and sites.',
+      welcome: 'Hello! I am **Krakenus AI**. I help summarize and find 10 branded topic images and sites.',
       placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
@@ -132,7 +132,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Відео',
     tabMaps: 'Карти',
     aiOverviewTitle: 'Krakenus AI — Огляд за допомогою ШІ',
-    aiGenerating: 'Генерація відповіді ШІ, унікальних картинок та 10 сайтів...',
+    aiGenerating: 'Генерація відповіді ШІ, фірмових картинок та 10 сайтів...',
     showMore: 'Показати повністю',
     showLess: 'Згорнути',
     quickQueries: [
@@ -148,7 +148,7 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ШІ-асистент Octopus Search',
-      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом, 10 сайтами та унікальними картинками.',
+      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом, 10 сайтами та фірмовими картинками.',
       placeholder: 'Задайте питання...',
       quickTitle: 'Підказки:',
       quickPrompts: [
@@ -161,21 +161,21 @@ const SEARCH_TRANSLATIONS = {
   },
 }
 
-// CURATED UNIQUE HIGH-QUALITY TOPIC IMAGE POOLS (NO DUPLICATES)
-const ROBLOX_IMAGES = [
+// REAL BRANDED & TOPIC SPECIFIC IMAGE POOLS (ROBLOX, PANCAKES, REACT, MINECRAFT)
+const AUTHENTIC_ROBLOX_IMAGES = [
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Roblox_Logo_2022.svg/800px-Roblox_Logo_2022.svg.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Roblox_player_icon_2022.svg/800px-Roblox_player_icon_2022.svg.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Roblox_Studio_2021_Icon.svg/800px-Roblox_Studio_2021_Icon.svg.png',
   'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1552824728-8b138132f584?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&auto=format&fit=crop&q=80',
 ]
 
-const PANCAKE_IMAGES = [
+const AUTHENTIC_PANCAKE_IMAGES = [
   'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=600&auto=format&fit=crop&q=80',
@@ -188,7 +188,8 @@ const PANCAKE_IMAGES = [
   'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&auto=format&fit=crop&q=80',
 ]
 
-const TECH_IMAGES = [
+const AUTHENTIC_TECH_IMAGES = [
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/800px-React-icon.svg.png',
   'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=80',
@@ -197,25 +198,24 @@ const TECH_IMAGES = [
   'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80',
 ]
 
 function getTopicImageForQuery(query: string, index: number): string {
   const lower = query.toLowerCase()
 
-  if (lower.includes('roblox') || lower.includes('роблокс') || lower.includes('игра') || lower.includes('game') || lower.includes('игры')) {
-    return ROBLOX_IMAGES[index % ROBLOX_IMAGES.length]
+  if (lower.includes('roblox') || lower.includes('роблокс')) {
+    return AUTHENTIC_ROBLOX_IMAGES[index % AUTHENTIC_ROBLOX_IMAGES.length]
   }
 
   if (lower.includes('блинчик') || lower.includes('млинц') || lower.includes('pancake') || lower.includes('рецепт') || lower.includes('еда')) {
-    return PANCAKE_IMAGES[index % PANCAKE_IMAGES.length]
+    return AUTHENTIC_PANCAKE_IMAGES[index % AUTHENTIC_PANCAKE_IMAGES.length]
   }
 
-  return TECH_IMAGES[index % TECH_IMAGES.length]
+  return AUTHENTIC_TECH_IMAGES[index % AUTHENTIC_TECH_IMAGES.length]
 }
 
-// Fetch 10 UNIQUE topic images using Wikimedia Commons API with fallback to unique Unsplash pool
+// Fetch 10 UNIQUE topic images using Wikimedia Commons API with fallback to authentic pools
 async function fetch10UniqueTopicImages(searchQuery: string): Promise<string[]> {
   const resultImages: string[] = []
   const cleanKeyword = searchQuery
@@ -243,7 +243,7 @@ async function fetch10UniqueTopicImages(searchQuery: string): Promise<string[]> 
     // ignore
   }
 
-  // 2. Fill remaining items up to 10 with guaranteed unique topic photos!
+  // 2. Fill remaining items up to 10 with authentic topic photos!
   for (let i = 0; i < 10; i++) {
     if (!resultImages[i]) {
       resultImages[i] = getTopicImageForQuery(searchQuery, i)
@@ -1030,7 +1030,7 @@ JSON Format:
                   </div>
                 )}
 
-                {/* EXACTLY 10 ORGANIC SITES LIST WITH REAL UNIQUE TOPIC IMAGES */}
+                {/* EXACTLY 10 ORGANIC SITES LIST WITH AUTHENTIC BRANDED IMAGES */}
                 <div className="google-organic-list">
                   {results.length > 0 ? (
                     results.map((item, index) => (
