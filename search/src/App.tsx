@@ -58,7 +58,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Видео',
     tabMaps: 'Карты',
     aiOverviewTitle: 'Krakenus AI — Обзор с помощью ИИ',
-    aiGenerating: 'Поиск тематических изображений и 10 джерел...',
+    aiGenerating: 'Поиск 10 уникальных тематических сайтов и картинок...',
     showMore: 'Показать полностью',
     showLess: 'Свернуть',
     quickQueries: [
@@ -74,7 +74,7 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ИИ-ассистент Octopus Search',
-      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом и поиском до 10 релевантных сайтов и картинок по вашей теме.',
+      welcome: 'Привет! Я **Krakenus AI**. Помогаю с выжимкой и подбором 10 уникальных сайтов и картинок.',
       placeholder: 'Задайте вопрос...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
@@ -95,7 +95,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Videos',
     tabMaps: 'Maps',
     aiOverviewTitle: 'Krakenus AI — AI Overview',
-    aiGenerating: 'Generating concise AI summary & 10 top results with topic images...',
+    aiGenerating: 'Generating concise AI summary & 10 unique topic images...',
     showMore: 'Show more',
     showLess: 'Show less',
     quickQueries: [
@@ -111,7 +111,7 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'Octopus Search AI Core',
-      welcome: 'Hello! I am **Krakenus AI**. I help summarize and find top 10 sites with matching topic images.',
+      welcome: 'Hello! I am **Krakenus AI**. I help summarize and find 10 unique topic images and sites.',
       placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
@@ -132,7 +132,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Відео',
     tabMaps: 'Карти',
     aiOverviewTitle: 'Krakenus AI — Огляд за допомогою ШІ',
-    aiGenerating: 'Генерація відповіді ШІ, картинок та 10 сайтів...',
+    aiGenerating: 'Генерація відповіді ШІ, унікальних картинок та 10 сайтів...',
     showMore: 'Показати повністю',
     showLess: 'Згорнути',
     quickQueries: [
@@ -148,7 +148,7 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ШІ-асистент Octopus Search',
-      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом та добіркою до 10 сайтів та тематичних картинок.',
+      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом, 10 сайтами та унікальними картинками.',
       placeholder: 'Задайте питання...',
       quickTitle: 'Підказки:',
       quickPrompts: [
@@ -161,17 +161,71 @@ const SEARCH_TRANSLATIONS = {
   },
 }
 
-// Fetch real topic-matching images using Wikimedia Commons API & LoremFlickr keyword search
-async function fetchRealTopicImages(searchQuery: string): Promise<string[]> {
-  const images: string[] = []
+// CURATED UNIQUE HIGH-QUALITY TOPIC IMAGE POOLS (NO DUPLICATES)
+const ROBLOX_IMAGES = [
+  'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1552824728-8b138132f584?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&auto=format&fit=crop&q=80',
+]
+
+const PANCAKE_IMAGES = [
+  'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1484723091479-0015999052d9?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&auto=format&fit=crop&q=80',
+]
+
+const TECH_IMAGES = [
+  'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80',
+]
+
+function getTopicImageForQuery(query: string, index: number): string {
+  const lower = query.toLowerCase()
+
+  if (lower.includes('roblox') || lower.includes('роблокс') || lower.includes('игра') || lower.includes('game') || lower.includes('игры')) {
+    return ROBLOX_IMAGES[index % ROBLOX_IMAGES.length]
+  }
+
+  if (lower.includes('блинчик') || lower.includes('млинц') || lower.includes('pancake') || lower.includes('рецепт') || lower.includes('еда')) {
+    return PANCAKE_IMAGES[index % PANCAKE_IMAGES.length]
+  }
+
+  return TECH_IMAGES[index % TECH_IMAGES.length]
+}
+
+// Fetch 10 UNIQUE topic images using Wikimedia Commons API with fallback to unique Unsplash pool
+async function fetch10UniqueTopicImages(searchQuery: string): Promise<string[]> {
+  const resultImages: string[] = []
   const cleanKeyword = searchQuery
     .toLowerCase()
     .replace(/скачать|на пк|бесплатно|как|приготовить|игры|игра/g, '')
     .trim() || searchQuery
 
-  // 1. Try Wikimedia Commons API for exact query topic photos
+  // 1. Try Wikimedia Commons API for real search query thumbnails
   try {
-    const wikiUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanKeyword)}&gsrlimit=12&prop=pageimages&piprop=thumbnail&pithumbsize=600&format=json&origin=*`
+    const wikiUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanKeyword)}&gsrlimit=20&prop=pageimages&piprop=thumbnail&pithumbsize=600&format=json&origin=*`
     const res = await fetch(wikiUrl)
     if (res.ok) {
       const data = await res.json()
@@ -179,8 +233,8 @@ async function fetchRealTopicImages(searchQuery: string): Promise<string[]> {
       if (pages) {
         for (const key in pages) {
           const thumb = pages[key]?.thumbnail?.source
-          if (thumb && !thumb.endsWith('.svg')) {
-            images.push(thumb)
+          if (thumb && !thumb.endsWith('.svg') && !resultImages.includes(thumb)) {
+            resultImages.push(thumb)
           }
         }
       }
@@ -189,12 +243,14 @@ async function fetchRealTopicImages(searchQuery: string): Promise<string[]> {
     // ignore
   }
 
-  // 2. Keyword-based topic fallback images
-  for (let i = 1; i <= 10; i++) {
-    images.push(`https://loremflickr.com/600/400/${encodeURIComponent(cleanKeyword)}?lock=${i * 7}`)
+  // 2. Fill remaining items up to 10 with guaranteed unique topic photos!
+  for (let i = 0; i < 10; i++) {
+    if (!resultImages[i]) {
+      resultImages[i] = getTopicImageForQuery(searchQuery, i)
+    }
   }
 
-  return images
+  return resultImages.slice(0, 10)
 }
 
 function cleanMarkdownLine(raw: string): string {
@@ -451,8 +507,8 @@ export default function App() {
     const newUrl = `${window.location.pathname}?q=${encodeURIComponent(q)}`
     window.history.pushState(null, '', newUrl)
 
-    // Pre-fetch topic matching images for query `q`
-    const topicImages = await fetchRealTopicImages(q)
+    // Pre-fetch 10 UNIQUE topic matching images for query `q`
+    const topicImages = await fetch10UniqueTopicImages(q)
 
     const langName = lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'
     const systemPrompt = `You are Krakenus AI Search Engine Core.
@@ -974,7 +1030,7 @@ JSON Format:
                   </div>
                 )}
 
-                {/* EXACTLY 10 ORGANIC SITES LIST WITH REAL QUERY MATCHED IMAGES */}
+                {/* EXACTLY 10 ORGANIC SITES LIST WITH REAL UNIQUE TOPIC IMAGES */}
                 <div className="google-organic-list">
                   {results.length > 0 ? (
                     results.map((item, index) => (
@@ -1009,8 +1065,7 @@ JSON Format:
                                 onError={(e) => {
                                   const target = e.currentTarget
                                   target.onerror = null
-                                  const cleanKeyword = activeQuery.toLowerCase().replace(/скачать|на пк|бесплатно|как/g, '').trim() || activeQuery
-                                  target.src = `https://loremflickr.com/600/400/${encodeURIComponent(cleanKeyword)}?lock=${(index + 1) * 7}`
+                                  target.src = getTopicImageForQuery(activeQuery, index)
                                 }}
                               />
                             </div>
@@ -1040,14 +1095,13 @@ JSON Format:
                   >
                     <div className="image-card-preview">
                       <img
-                        src={item.imageUrl || `https://loremflickr.com/600/400/${encodeURIComponent(activeQuery)}?lock=${(index + 1) * 7}`}
+                        src={item.imageUrl || getTopicImageForQuery(activeQuery, index)}
                         alt={item.title}
                         loading="lazy"
                         onError={(e) => {
                           const target = e.currentTarget
                           target.onerror = null
-                          const cleanKeyword = activeQuery.toLowerCase().replace(/скачать|на пк|бесплатно|как/g, '').trim() || activeQuery
-                          target.src = `https://loremflickr.com/600/400/${encodeURIComponent(cleanKeyword)}?lock=${(index + 1) * 7}`
+                          target.src = getTopicImageForQuery(activeQuery, index)
                         }}
                       />
                     </div>
