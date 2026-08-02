@@ -651,9 +651,8 @@ function LanguageSelectorMenu({
         aria-label="Выбор языка / Language menu"
       >
         <Globe size={14} />
-        <span>{LANGUAGE_CONFIG[currentLang].flag}</span>
         <span className="lang-code">{currentLang.toUpperCase()}</span>
-        <ChevronDown size={12} className={`lang-chevron ${open ? 'is-open' : ''}`} />
+        <ChevronDown size={11} className={`lang-chevron ${open ? 'is-open' : ''}`} />
       </button>
 
       {open && (
@@ -1273,19 +1272,19 @@ Ecosystem Services under Closed Beta:
             {t.nav.status}
             <ArrowDownRight size={15} />
           </a>
-        </div>
 
-        {tourUnlocked && (
-          <button
-            className="menu-button"
-            type="button"
-            aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {menuOpen ? <X /> : <Menu />}
-          </button>
-        )}
+          {tourUnlocked && (
+            <button
+              className="menu-button"
+              type="button"
+              aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              {menuOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          )}
+        </div>
 
         {menuOpen && tourUnlocked && (
           <nav className="mobile-nav" aria-label="Мобильная навигация">
