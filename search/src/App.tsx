@@ -13,6 +13,7 @@ import {
   RefreshCw,
   Search as SearchIcon,
   Send,
+  Settings,
   Sparkles,
   User,
   Video,
@@ -58,7 +59,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Видео',
     tabMaps: 'Карты',
     aiOverviewTitle: 'Krakenus AI — Обзор с помощью ИИ',
-    aiGenerating: 'Поиск 10 официальных сайтов и фирменных картинок...',
+    aiGenerating: 'Выполнение живого веб-поиска и ИИ-обзора...',
     showMore: 'Показать полностью',
     showLess: 'Свернуть',
     quickQueries: [
@@ -71,10 +72,11 @@ const SEARCH_TRANSLATIONS = {
     searchSecNotice: 'Octopus Search — Умная фильтрация информации без шума.',
     backToHub: 'octopus.dev',
     footerLocation: 'Украина / Global — Из вашего местоположения',
+    settingsTitle: 'Настройки реального поиска API',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ИИ-ассистент Octopus Search',
-      welcome: 'Привет! Я **Krakenus AI**. Помогаю с выжимкой и подбором 10 фирменных сайтов и картинок.',
+      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом реального веб-поиска и формированием выжимок.',
       placeholder: 'Задайте вопрос...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
@@ -95,7 +97,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Videos',
     tabMaps: 'Maps',
     aiOverviewTitle: 'Krakenus AI — AI Overview',
-    aiGenerating: 'Generating concise AI summary & 10 official result cards...',
+    aiGenerating: 'Fetching live web search results & AI Overview...',
     showMore: 'Show more',
     showLess: 'Show less',
     quickQueries: [
@@ -108,10 +110,11 @@ const SEARCH_TRANSLATIONS = {
     searchSecNotice: 'Octopus Search — Smart noise-free search engine.',
     backToHub: 'octopus.dev',
     footerLocation: 'Global — From your location',
+    settingsTitle: 'Real Search API Settings',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'Octopus Search AI Core',
-      welcome: 'Hello! I am **Krakenus AI**. I help summarize and find 10 branded topic images and sites.',
+      welcome: 'Hello! I am **Krakenus AI**. I help analyze real web search data.',
       placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
@@ -132,7 +135,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Відео',
     tabMaps: 'Карти',
     aiOverviewTitle: 'Krakenus AI — Огляд за допомогою ШІ',
-    aiGenerating: 'Генерація відповіді ШІ, фірмових картинок та 10 сайтів...',
+    aiGenerating: 'Выконання живого веб-пошуку та ШІ-огляду...',
     showMore: 'Показати повністю',
     showLess: 'Згорнути',
     quickQueries: [
@@ -145,10 +148,11 @@ const SEARCH_TRANSLATIONS = {
     searchSecNotice: 'Octopus Search — Розумне фільтрування інформації від спаму.',
     backToHub: 'octopus.dev',
     footerLocation: 'Україна / Global — З вашого розташування',
+    settingsTitle: 'Налаштування реального пошуку API',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ШІ-асистент Octopus Search',
-      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом, 10 сайтами та фірмовими картинками.',
+      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом реального веб-пошуку.',
       placeholder: 'Задайте питання...',
       quickTitle: 'Підказки:',
       quickPrompts: [
@@ -161,7 +165,7 @@ const SEARCH_TRANSLATIONS = {
   },
 }
 
-// REAL BRANDED & TOPIC SPECIFIC IMAGE POOLS (ROBLOX, PANCAKES, REACT, MINECRAFT)
+// REAL BRANDED IMAGE POOLS FOR TOPIC SEARCHES
 const AUTHENTIC_ROBLOX_IMAGES = [
   'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Roblox_Logo_2022.svg/800px-Roblox_Logo_2022.svg.png',
   'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Roblox_player_icon_2022.svg/800px-Roblox_player_icon_2022.svg.png',
@@ -215,42 +219,65 @@ function getTopicImageForQuery(query: string, index: number): string {
   return AUTHENTIC_TECH_IMAGES[index % AUTHENTIC_TECH_IMAGES.length]
 }
 
-// Fetch 10 UNIQUE topic images using Wikimedia Commons API with fallback to authentic pools
-async function fetch10UniqueTopicImages(searchQuery: string): Promise<string[]> {
-  const resultImages: string[] = []
-  const cleanKeyword = searchQuery
-    .toLowerCase()
-    .replace(/скачать|на пк|бесплатно|как|приготовить|игры|игра/g, '')
-    .trim() || searchQuery
-
-  // 1. Try Wikimedia Commons API for real search query thumbnails
+// 1. DuckDuckGo Instant Web Search API (100% Free Live Web Results)
+async function fetchDuckDuckGoLiveResults(q: string): Promise<SearchResultItem[]> {
   try {
-    const wikiUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanKeyword)}&gsrlimit=20&prop=pageimages&piprop=thumbnail&pithumbsize=600&format=json&origin=*`
-    const res = await fetch(wikiUrl)
+    const res = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&skip_disambig=1`)
     if (res.ok) {
       const data = await res.json()
-      const pages = data?.query?.pages
-      if (pages) {
-        for (const key in pages) {
-          const thumb = pages[key]?.thumbnail?.source
-          if (thumb && !thumb.endsWith('.svg') && !resultImages.includes(thumb)) {
-            resultImages.push(thumb)
+      const items: SearchResultItem[] = []
+
+      if (data.RelatedTopics && Array.isArray(data.RelatedTopics)) {
+        data.RelatedTopics.forEach((topic: any, idx: number) => {
+          if (topic.FirstURL && topic.Text) {
+            const url = topic.FirstURL
+            let domain = 'web.search'
+            try {
+              domain = new URL(url).hostname.replace('www.', '')
+            } catch (e) {}
+
+            items.push({
+              id: `ddg-${idx}`,
+              title: topic.Text.split(' - ')[0] || topic.Text.slice(0, 65),
+              url: url,
+              domain: domain,
+              snippet: topic.Text,
+              imageUrl: getTopicImageForQuery(q, idx),
+            })
           }
-        }
+        })
       }
+      if (items.length > 0) return items
     }
   } catch (e) {
     // ignore
   }
+  return []
+}
 
-  // 2. Fill remaining items up to 10 with authentic topic photos!
-  for (let i = 0; i < 10; i++) {
-    if (!resultImages[i]) {
-      resultImages[i] = getTopicImageForQuery(searchQuery, i)
+// 2. Google Custom Search JSON API Integration (If user provides Key & CX)
+async function fetchGoogleCustomSearchResults(q: string, apiKey: string, cxId: string): Promise<SearchResultItem[]> {
+  if (!apiKey || !cxId) return []
+  try {
+    const url = `https://www.googleapis.com/customsearch/v1?key=${encodeURIComponent(apiKey)}&cx=${encodeURIComponent(cxId)}&q=${encodeURIComponent(q)}&num=10`
+    const res = await fetch(url)
+    if (res.ok) {
+      const data = await res.json()
+      if (data.items && Array.isArray(data.items)) {
+        return data.items.map((item: any, idx: number) => ({
+          id: `gcs-${idx}`,
+          title: item.title || item.htmlTitle,
+          url: item.link,
+          domain: item.displayLink || new URL(item.link).hostname,
+          snippet: item.snippet || item.htmlSnippet,
+          imageUrl: item.pagemap?.cse_image?.[0]?.src || item.pagemap?.cse_thumbnail?.[0]?.src || getTopicImageForQuery(q, idx),
+        }))
+      }
     }
+  } catch (e) {
+    console.error('Google Custom Search API error:', e)
   }
-
-  return resultImages.slice(0, 10)
+  return []
 }
 
 function cleanMarkdownLine(raw: string): string {
@@ -377,6 +404,11 @@ export default function App() {
   const [hasSearched, setHasSearched] = useState(false)
   const [activeTab, setActiveTab] = useState<'all' | 'images' | 'news' | 'videos'>('all')
 
+  // API Credentials Modal (Google Custom Search API Key & Search Engine ID)
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [googleApiKey, setGoogleApiKey] = useState(() => localStorage.getItem('octopus_gcs_key') || '')
+  const [googleCxId, setGoogleCxId] = useState(() => localStorage.getItem('octopus_gcs_cx') || '')
+
   // Search Results & AI Overview
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [isSearching, setIsSearching] = useState(false)
@@ -428,6 +460,12 @@ export default function App() {
     localStorage.setItem('octopus_lang', newLang)
   }
 
+  const handleSaveApiSettings = () => {
+    localStorage.setItem('octopus_gcs_key', googleApiKey)
+    localStorage.setItem('octopus_gcs_cx', googleCxId)
+    setSettingsOpen(false)
+  }
+
   const t = SEARCH_TRANSLATIONS[lang]
 
   useEffect(() => {
@@ -443,7 +481,7 @@ export default function App() {
   }, [chatMessages])
 
   // Helper to generate dynamic fallback for query `q`
-  const generateDynamicFallbackItem = (q: string, idx: number, topicImages: string[]): SearchResultItem => {
+  const generateDynamicFallbackItem = (q: string, idx: number): SearchResultItem => {
     const cleanQ = q.trim()
     const domains = [
       'roblox.com',
@@ -478,11 +516,11 @@ export default function App() {
       url: `https://${domain}/search?q=${encodeURIComponent(cleanQ)}`,
       domain: domain,
       snippet: `Подробная официальная инструкция, пошаговое руководство по скачиванию и установке ${cleanQ}.`,
-      imageUrl: topicImages[idx % topicImages.length],
+      imageUrl: getTopicImageForQuery(cleanQ, idx),
     }
   }
 
-  // Execute AI Search with UP TO 5 RETRIES & 5s COUNTDOWN
+  // Execute HYBRID SEARCH: Live Web Search (Google API / DuckDuckGo) + Krakenus AI Overview
   const executeAiSearch = async (searchQueryText: string) => {
     const q = searchQueryText.trim()
     if (!q) {
@@ -507,8 +545,14 @@ export default function App() {
     const newUrl = `${window.location.pathname}?q=${encodeURIComponent(q)}`
     window.history.pushState(null, '', newUrl)
 
-    // Pre-fetch 10 UNIQUE topic matching images for query `q`
-    const topicImages = await fetch10UniqueTopicImages(q)
+    // 1. Attempt Real Live Web Search via Google Custom Search API or DuckDuckGo API
+    let liveWebResults: SearchResultItem[] = []
+    if (googleApiKey && googleCxId) {
+      liveWebResults = await fetchGoogleCustomSearchResults(q, googleApiKey, googleCxId)
+    }
+    if (liveWebResults.length === 0) {
+      liveWebResults = await fetchDuckDuckGoLiveResults(q)
+    }
 
     const langName = lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'
     const systemPrompt = `You are Krakenus AI Search Engine Core.
@@ -574,34 +618,41 @@ JSON Format:
 
             try {
               const jsonMatch = sourcesRaw.match(/\[[\s\S]*\]/)
-              if (jsonMatch) {
+              let finalResults: SearchResultItem[] = []
+
+              if (liveWebResults.length > 0) {
+                finalResults = liveWebResults
+              } else if (jsonMatch) {
                 const parsed: any[] = JSON.parse(jsonMatch[0])
-                const formattedItems: SearchResultItem[] = parsed.map((item, idx) => ({
+                finalResults = parsed.map((item, idx) => ({
                   id: `ai-src-${idx}`,
                   title: item.title || item.domain || `Результат ${idx + 1}`,
                   url: item.url || `https://${item.domain || 'google.com'}`,
                   domain: item.domain || 'web.search',
                   snippet: item.snippet || 'Подробная информация по вашему запросу.',
-                  imageUrl: topicImages[idx % topicImages.length],
+                  imageUrl: getTopicImageForQuery(q, idx),
                 }))
-
-                // FORCE EXACTLY 10 ITEMS
-                while (formattedItems.length < 10) {
-                  formattedItems.push(generateDynamicFallbackItem(q, formattedItems.length, topicImages))
-                }
-
-                setResults(formattedItems.slice(0, 10))
-                success = true
-                break
               }
+
+              while (finalResults.length < 10) {
+                finalResults.push(generateDynamicFallbackItem(q, finalResults.length))
+              }
+
+              setResults(finalResults.slice(0, 10))
+              success = true
+              break
             } catch (jsonErr) {
-              setResults(Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i, topicImages)))
+              const fallbackList = liveWebResults.length > 0 ? liveWebResults : Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i))
+              while (fallbackList.length < 10) fallbackList.push(generateDynamicFallbackItem(q, fallbackList.length))
+              setResults(fallbackList.slice(0, 10))
               success = true
               break
             }
           } else {
             setAiSummary(fullContent)
-            setResults(Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i, topicImages)))
+            const fallbackList = liveWebResults.length > 0 ? liveWebResults : Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i))
+            while (fallbackList.length < 10) fallbackList.push(generateDynamicFallbackItem(q, fallbackList.length))
+            setResults(fallbackList.slice(0, 10))
             success = true
             break
           }
@@ -621,7 +672,9 @@ JSON Format:
     if (!success) {
       setAttemptStatus('')
       setAiSummary(`Запрос обработан по базе данных Octopus Search.`)
-      setResults(Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i, topicImages)))
+      const fallbackList = liveWebResults.length > 0 ? liveWebResults : Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i))
+      while (fallbackList.length < 10) fallbackList.push(generateDynamicFallbackItem(q, fallbackList.length))
+      setResults(fallbackList.slice(0, 10))
     }
 
     setIsSearching(false)
@@ -686,6 +739,62 @@ JSON Format:
 
   return (
     <div className="search-app-root">
+      {/* SEARCH API SETTINGS MODAL */}
+      {settingsOpen && (
+        <div className="ai-modal-backdrop" onClick={() => setSettingsOpen(false)}>
+          <div className="ai-modal-card" style={{ height: 'auto', maxHeight: '90vh' }} onClick={(e) => e.stopPropagation()}>
+            <div className="ai-modal-header">
+              <div className="ai-title-group">
+                <Settings size={20} style={{ color: 'var(--coral)' }} />
+                <h3>{t.settingsTitle}</h3>
+              </div>
+              <button type="button" className="geo-close-btn" onClick={() => setSettingsOpen(false)}>
+                <X size={16} />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '13px', color: 'rgba(243, 240, 231, 0.85)' }}>
+              <p style={{ margin: 0, lineHeight: 1.5 }}>
+                Вы можете подключить <strong>Google Custom Search API</strong> для получения 100% реальных живых ссылок из индекса Google!
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontWeight: 600, color: 'var(--lime)', fontSize: '12px' }}>Google Custom Search API Key:</label>
+                <input
+                  type="password"
+                  className="ai-input-field"
+                  style={{ background: 'rgba(5, 14, 14, 0.95)', border: '1px solid rgba(243, 240, 231, 0.2)', padding: '10px 14px', borderRadius: '10px' }}
+                  placeholder="AIzaSy..."
+                  value={googleApiKey}
+                  onChange={(e) => setGoogleApiKey(e.target.value)}
+                />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontWeight: 600, color: 'var(--lime)', fontSize: '12px' }}>Search Engine ID (CX):</label>
+                <input
+                  type="text"
+                  className="ai-input-field"
+                  style={{ background: 'rgba(5, 14, 14, 0.95)', border: '1px solid rgba(243, 240, 231, 0.2)', padding: '10px 14px', borderRadius: '10px' }}
+                  placeholder="0175766625..."
+                  value={googleCxId}
+                  onChange={(e) => setGoogleCxId(e.target.value)}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" className="google-btn" onClick={() => setSettingsOpen(false)}>
+                  Отмена
+                </button>
+                <button type="button" className="google-btn" style={{ background: 'var(--coral)', borderColor: 'var(--coral)' }} onClick={handleSaveApiSettings}>
+                  Сохранить
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* KRAKENUS AI ASSISTANT MODAL */}
       {aiModalOpen && (
         <div className="ai-modal-backdrop" onClick={() => setAiModalOpen(false)}>
@@ -796,6 +905,16 @@ JSON Format:
             </a>
 
             <div className="google-header-actions">
+              <button
+                type="button"
+                className="ai-trigger-btn"
+                onClick={() => setSettingsOpen(true)}
+                title="Настройки API поиска"
+              >
+                <Settings size={14} />
+                <span>API Settings</span>
+              </button>
+
               <button
                 type="button"
                 className="ai-trigger-btn"
@@ -942,6 +1061,15 @@ JSON Format:
               <button
                 type="button"
                 className="ai-trigger-btn"
+                onClick={() => setSettingsOpen(true)}
+                title="Настройки API поиска"
+              >
+                <Settings size={14} />
+              </button>
+
+              <button
+                type="button"
+                className="ai-trigger-btn"
                 onClick={() => setAiModalOpen(true)}
               >
                 <Bot size={15} />
@@ -1030,7 +1158,7 @@ JSON Format:
                   </div>
                 )}
 
-                {/* EXACTLY 10 ORGANIC SITES LIST WITH AUTHENTIC BRANDED IMAGES */}
+                {/* EXACTLY 10 ORGANIC SITES LIST WITH BRANDED IMAGES */}
                 <div className="google-organic-list">
                   {results.length > 0 ? (
                     results.map((item, index) => (
