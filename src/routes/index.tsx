@@ -727,8 +727,13 @@ function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   
-  // Tour state & Locking mechanism
-  const [tourUnlocked, setTourUnlocked] = useState(false)
+  // Tour state with localStorage persistence
+  const [tourUnlocked, setTourUnlocked] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('octopus_tour_completed') === 'true'
+    }
+    return false
+  })
   const [tourActive, setTourActive] = useState(false)
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
 
@@ -785,13 +790,14 @@ function HomePage() {
     }
   }, [])
 
-  // IP Geolocation Check & Language Persistence
+  // IP Geolocation Check & Language Persistence Fix
   useEffect(() => {
     const savedLang = localStorage.getItem('octopus_lang') as Language
     const geoPrompted = localStorage.getItem('octopus_geo_prompted')
 
     if (savedLang && (savedLang === 'ru' || savedLang === 'en' || savedLang === 'uk')) {
       setLang(savedLang)
+      return // STRICT PERSISTENCE FIX: Do NOT run IP geolocation if user previously saved language preference!
     }
 
     const controller = new AbortController()
@@ -885,7 +891,7 @@ function HomePage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [tourActive, isLandingBack, t.tourSteps])
 
-  // OpenRouter API Call to Krakenus AI with Closed Beta Directive
+  // OpenRouter API Call to Krakenus AI with Language Fallback Fix
   const handleSendAiMessage = async (textToSend?: string) => {
     const prompt = (textToSend || aiInput).trim()
     if (!prompt || aiLoading) return
@@ -904,12 +910,7 @@ function HomePage() {
     const systemPrompt = `You are Krakenus AI, the official neural assistant for Octopus Labs. You respond cleanly, professionally, and warmly in the user's language (${lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'}).
 
 IMPORTANT STATUS DIRECTIVE:
-All planned ecosystem products (Octopus Search, Octopus Studio, Octopus Cloud) are currently in CLOSED BETA TESTING (Закрытый Бета-Тест) and NOT yet publicly released. If asked about release or availability, explain that closed beta testing is underway to ensure high quality before public release.
-
-Ecosystem Services under Closed Beta:
-1. Octopus Search (search.octopus.dev) - smart noise-free filter engine (Closed Beta Test).
-2. Octopus Studio (studio.octopus.dev) - web tools for creators (Closed Beta Test).
-3. Octopus Cloud (cloud.octopus.dev) - encrypted storage sync (Closed Beta Test).`
+All planned ecosystem products (Octopus Search, Octopus Studio, Octopus Cloud) are currently in CLOSED BETA TESTING (Закрытый Бета-Тест) and NOT yet publicly released. If asked about release or availability, explain that closed beta testing is underway to ensure high quality before public release.`
 
     try {
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -938,7 +939,11 @@ Ecosystem Services under Closed Beta:
       }
 
       const data = await response.json()
-      const reply = data.choices?.[0]?.message?.content || 'Запрос обработан. Попробуйте уточнить вопрос.'
+      const reply = data.choices?.[0]?.message?.content || (
+        lang === 'uk' ? 'Запит оброблено. Спробуйте уточнити запитання.' :
+        lang === 'en' ? 'Request processed. Please refine your question.' :
+        'Запрос обработан. Попробуйте уточнить вопрос.'
+      )
 
       setChatMessages((prev) => {
         const next = [...prev]
@@ -952,10 +957,10 @@ Ecosystem Services under Closed Beta:
         next[next.length - 1] = {
           sender: 'ai',
           text: lang === 'uk'
-            ? 'Привіт! Запит оброблено, але сталася мережева пауза. Будь ласка, спробуйте ще раз.'
+            ? 'Вибачте! Сталася невелика мережева пауза. Будь ласка, спробуйте ще раз.'
             : lang === 'en'
-            ? 'Hello! Request reached a network pause. Please try asking again.'
-            : 'Привет! Произошла небольшая пауза сети. Задайте вопрос ещё раз.',
+            ? 'Sorry! A brief network error occurred. Please try asking again.'
+            : 'Извините! Произошла небольшая пауза сети. Задайте вопрос ещё раз.',
         }
         return next
       })
@@ -991,6 +996,7 @@ Ecosystem Services under Closed Beta:
   const finishTour = () => {
     setIsLandingBack(true)
     setTourUnlocked(true)
+    localStorage.setItem('octopus_tour_completed', 'true')
     
     window.scrollTo({ top: 0, behavior: 'smooth' })
 
