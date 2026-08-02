@@ -13,19 +13,25 @@ import {
   RefreshCw,
   Search as SearchIcon,
   Send,
-  Settings,
   Sparkles,
   User,
   Video,
   X,
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { searchOctopusEngine } from './services/searchEngine'
-import { IndexEntry } from './data/searchIndex'
 
 export type Language = 'ru' | 'en' | 'uk'
 
-interface SearchResultItem extends IndexEntry {}
+interface SearchResultItem {
+  id: string
+  title: string
+  url: string
+  domain: string
+  snippet: string
+  imageUrl?: string
+  category?: string
+  date?: string
+}
 
 interface ChatMessage {
   sender: 'user' | 'ai'
@@ -45,31 +51,30 @@ const SEARCH_TRANSLATIONS = {
   ru: {
     btnSearch: 'Поиск в Octopus',
     btnLucky: 'Мне повезет!',
-    placeholder: 'Введите поисковый запрос...',
+    placeholder: 'Введите любой поисковый запрос...',
     tabAll: 'Все',
     tabImages: 'Картинки',
     tabNews: 'Новости',
     tabVideos: 'Видео',
     tabMaps: 'Карты',
-    aiOverviewTitle: 'Krakenus AI — Обзор с помощью ИИ',
-    aiGenerating: 'Поиск в индексе Octopus и генерация ИИ-выжимки...',
+    aiOverviewTitle: 'Krakenus AI — Поисковый обзор ИИ',
+    aiGenerating: 'Поиск и генерация 10 сайтов по вашему запросу...',
     showMore: 'Показать полностью',
     showLess: 'Свернуть',
     quickQueries: [
-      'как приготовить сладкие блинчики',
-      'Роблокс скачать на ПК',
+      'как сделать домашнюю пиццу',
+      'как скачать GTA 5 на ПК',
       'Что нового в React 19',
-      'Документация TanStack Start',
+      'как приготовить сладкие блинчики',
     ],
     resultsCount: 'Результатов: примерно',
-    searchSecNotice: 'Octopus Search Engine — Родная поисковая система Octopus без спама.',
+    searchSecNotice: 'Octopus Search — Умный ИИ-поисковик без спама.',
     backToHub: 'octopus.dev',
     footerLocation: 'Украина / Global — Из вашего местоположения',
-    settingsTitle: 'Настройки поискового движка Octopus',
     krakenusAi: {
       title: 'Krakenus AI',
-      subtitle: 'ИИ-ассистент Octopus Search Engine',
-      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом поискового индекса Octopus.',
+      subtitle: 'ИИ-ассистент Octopus Search',
+      welcome: 'Привет! Я **Krakenus AI**. Ищу информацию и генерирую списки сайтов строго по вашему запросу.',
       placeholder: 'Задайте вопрос...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
@@ -83,31 +88,30 @@ const SEARCH_TRANSLATIONS = {
   en: {
     btnSearch: 'Octopus Search',
     btnLucky: "I'm Feeling Lucky",
-    placeholder: 'Search the web...',
+    placeholder: 'Search for anything...',
     tabAll: 'All',
     tabImages: 'Images',
     tabNews: 'News',
     tabVideos: 'Videos',
     tabMaps: 'Maps',
-    aiOverviewTitle: 'Krakenus AI — AI Overview',
-    aiGenerating: 'Searching Octopus Index & AI Overview...',
+    aiOverviewTitle: 'Krakenus AI — AI Search Overview',
+    aiGenerating: 'AI is searching & generating 10 sites for your query...',
     showMore: 'Show more',
     showLess: 'Show less',
     quickQueries: [
-      'how to make sweet pancakes',
-      'Download Roblox on PC',
+      'how to make homemade pizza',
+      'download GTA 5 for PC',
       'What is new in React 19',
-      'TanStack Start documentation',
+      'how to make sweet pancakes',
     ],
     resultsCount: 'About',
-    searchSecNotice: 'Octopus Search Engine — Native noise-free search index.',
+    searchSecNotice: 'Octopus Search — Smart AI search engine.',
     backToHub: 'octopus.dev',
     footerLocation: 'Global — From your location',
-    settingsTitle: 'Octopus Search Engine Settings',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'Octopus Search AI Core',
-      welcome: 'Hello! I am **Krakenus AI**. I help analyze native Octopus index search data.',
+      welcome: 'Hello! I am **Krakenus AI**. I generate 10 tailored search results for any query.',
       placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
@@ -121,31 +125,30 @@ const SEARCH_TRANSLATIONS = {
   uk: {
     btnSearch: 'Пошук в Octopus',
     btnLucky: 'Мені пощастить!',
-    placeholder: 'Введіть запит для пошуку...',
+    placeholder: 'Введіть будь-який запит для пошуку...',
     tabAll: 'Усі',
     tabImages: 'Зображення',
     tabNews: 'Новини',
     tabVideos: 'Відео',
     tabMaps: 'Карти',
-    aiOverviewTitle: 'Krakenus AI — Огляд за допомогою ШІ',
-    aiGenerating: 'Пошук в індексі Octopus та ШІ-огляд...',
+    aiOverviewTitle: 'Krakenus AI — Пошуковий огляд ШІ',
+    aiGenerating: 'ШІ шукає та формує 10 сайтів за вашим запитом...',
     showMore: 'Показати повністю',
     showLess: 'Згорнути',
     quickQueries: [
-      'як приготувати солодкі млинці',
-      'Роблокс скачати на ПК',
+      'як зробити домашню піцу',
+      'як скачати GTA 5 на ПК',
       'Що нового в React 19',
-      'Документація TanStack Start',
+      'як приготувати солодкі млинці',
     ],
     resultsCount: 'Результатів: приблизно',
-    searchSecNotice: 'Octopus Search Engine — Рідна пошукова система Octopus.',
+    searchSecNotice: 'Octopus Search — Розумний ШІ-пошуковик від спаму.',
     backToHub: 'octopus.dev',
     footerLocation: 'Україна / Global — З вашого розташування',
-    settingsTitle: 'Налаштування пошукового рушія Octopus',
     krakenusAi: {
       title: 'Krakenus AI',
-      subtitle: 'ШІ-асистент Octopus Search Engine',
-      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом пошукового індексу Octopus.',
+      subtitle: 'ШІ-асистент Octopus Search',
+      welcome: 'Вітаю! Я **Krakenus AI**. Формую добірку 10 сайтів чітко за вашим запитом.',
       placeholder: 'Задайте питання...',
       quickTitle: 'Підказки:',
       quickPrompts: [
@@ -156,6 +159,31 @@ const SEARCH_TRANSLATIONS = {
       clearTooltip: 'Очистити історію',
     },
   },
+}
+
+// Convert common search query nouns to English for relevant image fetching
+function extractEnglishKeyword(query: string): string {
+  const lower = query.toLowerCase()
+
+  if (lower.includes('пицц') || lower.includes('pizza')) return 'pizza'
+  if (lower.includes('блинчик') || lower.includes('блин') || lower.includes('млинц') || lower.includes('pancake')) return 'pancakes'
+  if (lower.includes('gta') || lower.includes('гта')) return 'gaming'
+  if (lower.includes('роблокс') || lower.includes('roblox')) return 'video game'
+  if (lower.includes('майнкрафт') || lower.includes('minecraft')) return 'minecraft'
+  if (lower.includes('велосипед') || lower.includes('байк') || lower.includes('bike')) return 'bicycle'
+  if (lower.includes('машин') || lower.includes('авто') || lower.includes('car')) return 'car'
+  if (lower.includes('кот') || lower.includes('кошк') || lower.includes('cat')) return 'cat'
+  if (lower.includes('собак') || lower.includes('пес') || lower.includes('dog')) return 'dog'
+  if (lower.includes('react') || lower.includes('реакт') || lower.includes('код') || lower.includes('code')) return 'coding'
+  if (lower.includes('телефон') || lower.includes('айфон') || lower.includes('iphone')) return 'smartphone'
+
+  const clean = query.replace(/как|скачать|на|пк|бесплатно|приготовить|где|купить|что|такое/gi, '').trim()
+  return clean || 'technology'
+}
+
+function getQueryMatchedImageUrl(query: string, index: number): string {
+  const keyword = extractEnglishKeyword(query)
+  return `https://loremflickr.com/600/400/${encodeURIComponent(keyword)}?lock=${(index + 1) * 11}`
 }
 
 function cleanMarkdownLine(raw: string): string {
@@ -287,7 +315,10 @@ export default function App() {
   const [isSearching, setIsSearching] = useState(false)
   const [aiSummary, setAiSummary] = useState('')
   const [aiExpanded, setAiExpanded] = useState(false)
-  const [searchTime, setSearchTime] = useState('0.14')
+  const [searchTime, setSearchTime] = useState('0.28')
+
+  // Retry state & countdown
+  const [attemptStatus, setAttemptStatus] = useState('')
 
   // Krakenus AI Assistant Modal
   const [aiModalOpen, setAiModalOpen] = useState(false)
@@ -321,7 +352,7 @@ export default function App() {
     const qParam = params.get('q')
     if (qParam) {
       setQuery(qParam)
-      executeOctopusSearch(qParam)
+      executeAiDynamicSearch(qParam)
     }
   }, [])
 
@@ -344,8 +375,8 @@ export default function App() {
     }
   }, [chatMessages])
 
-  // EXECUTE OCTOPUS SEARCH ENGINE
-  const executeOctopusSearch = async (searchQueryText: string) => {
+  // PURE AI SEARCH GENERATOR — DYNAMICALLY CREATES 10 TAILORED SITES FOR ANY QUERY
+  const executeAiDynamicSearch = async (searchQueryText: string) => {
     const q = searchQueryText.trim()
     if (!q) {
       setHasSearched(false)
@@ -353,6 +384,7 @@ export default function App() {
       setResults([])
       setAiSummary('')
       setAiExpanded(false)
+      setAttemptStatus('')
       window.history.pushState(null, '', window.location.pathname)
       return
     }
@@ -363,59 +395,139 @@ export default function App() {
     setIsSearching(true)
     setAiSummary('')
     setAiExpanded(false)
+    setAttemptStatus('')
 
     const newUrl = `${window.location.pathname}?q=${encodeURIComponent(q)}`
     window.history.pushState(null, '', newUrl)
 
-    // 1. Run Octopus Search Index Engine (TF-IDF & Category Intent Classifier)
-    const searchResults = searchOctopusEngine(q)
-    setResults(searchResults)
-
-    const endTime = performance.now()
-    setSearchTime(((endTime - startTime) / 1000).toFixed(2))
-
-    // 2. Synthesize AI Overview using OpenRouter
     const langName = lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'
-    const systemPrompt = `You are Krakenus AI, the intelligent engine of Octopus Search.
-User query: "${q}".
+    const systemPrompt = `You are Krakenus AI Web Search Core.
+The user is searching for: "${q}".
 
 Strict Rules:
-1. Provide a CONCISE, ultra-useful AI Overview in ${langName}. Must start with top 5 key points.
-2. Do NOT output raw markdown headers ("###") or link brackets "[http://...]".
-3. Provide essential facts matching the query context.`
+1. Provide a CONCISE, expert AI Overview answering "${q}" in ${langName}. The response MUST start with the 5 most informative bullet points.
+2. Do NOT use raw markdown header tags like "###", do NOT output raw link brackets like "[http://...]".
+3. At the end of your response, output EXACTLY "---SOURCES---" followed by a JSON array of EXACTLY 10 realistic, authentic web search results tailored SPECIFICALLY to "${q}". Do NOT output unrelated sites (e.g. no pancakes if user asked about games, no roblox if user asked about food)!
 
-    try {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-          'HTTP-Referer': 'https://octopus.dev',
-          'X-Title': 'Octopus Search',
-        },
-        body: JSON.stringify({
-          model: MODEL_NAME,
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: q },
-          ],
-          stream: false,
-        }),
-      })
+JSON Format:
+[
+  {
+    "title": "Exact title matching ${q}",
+    "domain": "realistic-domain.com",
+    "url": "https://realistic-domain.com/path",
+    "snippet": "Accurate 2-sentence description about ${q}..."
+  }
+]`
 
-      if (response.ok) {
-        const data = await response.json()
-        const fullContent: string = data.choices?.[0]?.message?.content || ''
-        setAiSummary(fullContent)
-      } else {
-        setAiSummary(`Подробный разбор по запросу "${q}". Используйте представленные ниже сайты.`)
+    let attempt = 0
+    const maxAttempts = 5
+    let success = false
+
+    while (attempt < maxAttempts && !success) {
+      attempt++
+      if (attempt > 1) {
+        setAttemptStatus(`Попытка ${attempt} из ${maxAttempts}...`)
       }
-    } catch (e) {
-      console.error('AI Overview fetch error:', e)
-      setAiSummary(`Подробный разбор по запросу "${q}". Используйте представленные ниже сайты.`)
-    } finally {
-      setIsSearching(false)
+
+      try {
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+            'HTTP-Referer': 'https://octopus.dev',
+            'X-Title': 'Octopus Search',
+          },
+          body: JSON.stringify({
+            model: MODEL_NAME,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: q },
+            ],
+            stream: false,
+          }),
+        })
+
+        const endTime = performance.now()
+        setSearchTime(((endTime - startTime) / 1000).toFixed(2))
+
+        if (response.ok) {
+          const data = await response.json()
+          const fullContent: string = data.choices?.[0]?.message?.content || ''
+
+          if (fullContent.includes('---SOURCES---')) {
+            const parts = fullContent.split('---SOURCES---')
+            const answerText = parts[0].trim()
+            const sourcesRaw = parts[1].trim()
+
+            setAiSummary(answerText)
+
+            try {
+              const jsonMatch = sourcesRaw.match(/\[[\s\S]*\]/)
+              if (jsonMatch) {
+                const parsed: any[] = JSON.parse(jsonMatch[0])
+                const formattedItems: SearchResultItem[] = parsed.map((item, idx) => ({
+                  id: `ai-src-${idx}`,
+                  title: item.title || `${q} — Результат ${idx + 1}`,
+                  url: item.url || `https://${item.domain || 'google.com'}/search?q=${encodeURIComponent(q)}`,
+                  domain: item.domain || 'web.search',
+                  snippet: item.snippet || `Информация по запросу ${q}.`,
+                  imageUrl: getQueryMatchedImageUrl(q, idx),
+                }))
+
+                // Ensure exactly 10 items tailored to q
+                while (formattedItems.length < 10) {
+                  const idx = formattedItems.length
+                  formattedItems.push({
+                    id: `ai-pad-${idx}`,
+                    title: `${q} — Руководство и полезная информация №${idx + 1}`,
+                    url: `https://web.search/info/${encodeURIComponent(q)}`,
+                    domain: 'search.octopus.dev',
+                    snippet: `Подробные сведения, инструкции и обсуждение по запросу "${q}".`,
+                    imageUrl: getQueryMatchedImageUrl(q, idx),
+                  })
+                }
+
+                setResults(formattedItems.slice(0, 10))
+                success = true
+                break
+              }
+            } catch (jsonErr) {
+              // fallback handling
+            }
+          } else {
+            setAiSummary(fullContent)
+          }
+        }
+      } catch (e) {
+        console.error(`Attempt ${attempt} error:`, e)
+      }
+
+      if (!success && attempt < maxAttempts) {
+        for (let sec = 5; sec > 0; sec--) {
+          setAttemptStatus(`Не удалось. Повторная попытка (${attempt}/${maxAttempts}) через ${sec} сек...`)
+          await new Promise((r) => setTimeout(r, 1000))
+        }
+      }
     }
+
+    if (!success) {
+      setAttemptStatus('')
+      setAiSummary(`Информация по запросу "${q}".`)
+      setResults(
+        Array.from({ length: 10 }, (_, i) => ({
+          id: `dyn-ai-fallback-${i}`,
+          title: `${q} — Страница информации №${i + 1}`,
+          url: `https://search.octopus.dev/page?q=${encodeURIComponent(q)}`,
+          domain: 'search.octopus.dev',
+          snippet: `Полное практическое руководство, обзоры и ответы на частые вопросы по запросу "${q}".`,
+          imageUrl: getQueryMatchedImageUrl(q, i),
+        }))
+      )
+    }
+
+    setIsSearching(false)
+    setAttemptStatus('')
   }
 
   const handleSendAiMessage = async (textToSend?: string) => {
@@ -609,7 +721,7 @@ Strict Rules:
               className="google-search-bar-form"
               onSubmit={(e) => {
                 e.preventDefault()
-                executeOctopusSearch(query)
+                executeAiDynamicSearch(query)
               }}
             >
               <div className="google-search-input-pill">
@@ -643,7 +755,7 @@ Strict Rules:
                   onClick={() => {
                     const randomQuery = t.quickQueries[Math.floor(Math.random() * t.quickQueries.length)]
                     setQuery(randomQuery)
-                    executeOctopusSearch(randomQuery)
+                    executeAiDynamicSearch(randomQuery)
                   }}
                 >
                   {t.btnLucky}
@@ -659,7 +771,7 @@ Strict Rules:
                   className="google-chip-link"
                   onClick={() => {
                     setQuery(q)
-                    executeOctopusSearch(q)
+                    executeAiDynamicSearch(q)
                   }}
                 >
                   <SearchIcon size={12} />
@@ -687,7 +799,7 @@ Strict Rules:
                 onClick={(e) => {
                   e.preventDefault()
                   setQuery('')
-                  executeOctopusSearch('')
+                  executeAiDynamicSearch('')
                 }}
               >
                 <OctopusMark compact />
@@ -698,7 +810,7 @@ Strict Rules:
                 className="google-top-search-form"
                 onSubmit={(e) => {
                   e.preventDefault()
-                  executeOctopusSearch(query)
+                  executeAiDynamicSearch(query)
                 }}
               >
                 <div className="google-top-pill">
@@ -715,7 +827,7 @@ Strict Rules:
                       className="google-clear-btn"
                       onClick={() => {
                         setQuery('')
-                        executeOctopusSearch('')
+                        executeAiDynamicSearch('')
                       }}
                     >
                       <X size={16} />
@@ -799,7 +911,7 @@ Strict Rules:
                     {isSearching ? (
                       <div className="google-ai-loading">
                         <span className="pulse-dot" />
-                        <p>{t.aiGenerating}</p>
+                        <p>{attemptStatus || t.aiGenerating}</p>
                       </div>
                     ) : (
                       <>
@@ -820,10 +932,10 @@ Strict Rules:
                   </div>
                 )}
 
-                {/* EXACTLY 10 ORGANIC SITES LIST FROM OCTOPUS SEARCH INDEX */}
+                {/* EXACTLY 10 ORGANIC SITES LIST GENERATED BY AI DYNAMICALLY FOR THE QUERY */}
                 <div className="google-organic-list">
                   {results.length > 0 ? (
-                    results.map((item) => (
+                    results.map((item, index) => (
                       <article key={item.id} className="google-result-item">
                         <div className="google-result-card-inner">
                           <div className="google-result-content-col">
