@@ -3,6 +3,7 @@ import {
   Bot,
   Check,
   ChevronDown,
+  ChevronUp,
   ExternalLink,
   Globe,
   Globe2,
@@ -51,30 +52,32 @@ const SEARCH_TRANSLATIONS = {
     btnLucky: 'Мне повезет!',
     placeholder: 'Введите поисковый запрос...',
     tabAll: 'Все',
-    tabNews: 'Новости',
     tabImages: 'Картинки',
+    tabNews: 'Новости',
     tabVideos: 'Видео',
     tabMaps: 'Карты',
     aiOverviewTitle: 'Krakenus AI — Обзор с помощью ИИ',
-    aiGenerating: 'Поиск источников и сгенерированный ответ ИИ...',
+    aiGenerating: 'Генерация выжимки ИИ (первые 5 фактов)...',
+    showMore: 'Показать полностью',
+    showLess: 'Свернуть',
     quickQueries: [
       'как приготовить сладкие блинчики',
       'Что нового в React 19',
-      'Документация TanStack Start',
+      'TanStack Start документация',
       'Как работает доменная архитектура Octopus',
     ],
     resultsCount: 'Результатов: примерно',
-    searchSecNotice: 'Octopus Search — Умная фильтрация информации от шума и рекламы.',
+    searchSecNotice: 'Octopus Search — Умная фильтрация информации без шума.',
     backToHub: 'octopus.dev',
     footerLocation: 'Украина / Global — Из вашего местоположения',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ИИ-ассистент Octopus Search',
-      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом и ответами на любые поисковые запросы.',
-      placeholder: 'Задайте вопрос по поиску...',
+      welcome: 'Привет! Я **Krakenus AI**. Помогаю с краткой выжимкой и ответами на любой запрос.',
+      placeholder: 'Задайте вопрос...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
-        'Сделать выжимку',
+        'Краткая выжимка',
         'Пошаговый рецепт',
         'Объяснить термины',
       ],
@@ -86,12 +89,14 @@ const SEARCH_TRANSLATIONS = {
     btnLucky: "I'm Feeling Lucky",
     placeholder: 'Search the web...',
     tabAll: 'All',
-    tabNews: 'News',
     tabImages: 'Images',
+    tabNews: 'News',
     tabVideos: 'Videos',
     tabMaps: 'Maps',
     aiOverviewTitle: 'Krakenus AI — AI Overview',
-    aiGenerating: 'Searching web sources and generating AI Overview...',
+    aiGenerating: 'Generating concise AI summary (top 5 key points)...',
+    showMore: 'Show more',
+    showLess: 'Show less',
     quickQueries: [
       'how to make sweet pancakes',
       'What is new in React 19',
@@ -105,11 +110,11 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'Octopus Search AI Core',
-      welcome: 'Hello! I am **Krakenus AI**. I help analyze and answer your search queries.',
+      welcome: 'Hello! I am **Krakenus AI**. I help summarize and answer your search queries.',
       placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
-        'Summarize top results',
+        'Summarize results',
         'Step-by-step recipe',
         'Explain concept',
       ],
@@ -121,12 +126,14 @@ const SEARCH_TRANSLATIONS = {
     btnLucky: 'Мені пощастить!',
     placeholder: 'Введіть запит для пошуку...',
     tabAll: 'Усі',
-    tabNews: 'Новини',
     tabImages: 'Зображення',
+    tabNews: 'Новини',
     tabVideos: 'Відео',
     tabMaps: 'Карти',
     aiOverviewTitle: 'Krakenus AI — Огляд за допомогою ШІ',
-    aiGenerating: 'Пошук джерел та генерація миттєвої відповіді ШІ...',
+    aiGenerating: 'Генерація стислої відповіді ШІ (перші 5 фактів)...',
+    showMore: 'Показати повністю',
+    showLess: 'Згорнути',
     quickQueries: [
       'як приготувати солодкі млинці',
       'Що нового в React 19',
@@ -153,8 +160,18 @@ const SEARCH_TRANSLATIONS = {
   },
 }
 
+// Clean raw markdown symbols (hashes, duplicate links, markdown lines)
+function cleanMarkdownLine(raw: string): string {
+  let cleaned = raw.replace(/^#{1,6}\s*/, '') // Remove ### headers
+  cleaned = cleaned.replace(/^[-*]{2,}\s*$/, '') // Remove -- lines
+  // Resolve markdown links [text](url) -> text
+  cleaned = cleaned.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1')
+  return cleaned.trim()
+}
+
 function parseInlineMarkdown(text: string) {
-  const parts = text.split(/(\*\*.*?\*\*|`.*?`)/g)
+  const clean = cleanMarkdownLine(text)
+  const parts = clean.split(/(\*\*.*?\*\*|`.*?`)/g)
   return parts.map((part, idx) => {
     if (part.startsWith('**') && part.endsWith('**')) {
       return <strong key={idx}>{part.slice(2, -2)}</strong>
@@ -171,11 +188,11 @@ function FormattedAiText({ text }: { text: string }) {
   return (
     <div className="formatted-ai-content">
       {lines.map((line, lineIdx) => {
-        const trimmed = line.trim()
-        if (!trimmed) return <div key={lineIdx} className="formatted-spacer" />
+        const cleaned = cleanMarkdownLine(line)
+        if (!cleaned) return null
 
-        if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || /^\d+\.\s/.test(trimmed)) {
-          const content = trimmed.replace(/^([-*]|\d+\.)\s*/, '')
+        if (cleaned.startsWith('- ') || cleaned.startsWith('* ') || /^\d+\.\s/.test(cleaned)) {
+          const content = cleaned.replace(/^([-*]|\d+\.)\s*/, '')
           return (
             <div key={lineIdx} className="formatted-list-item">
               <span className="list-bullet">•</span>
@@ -184,7 +201,7 @@ function FormattedAiText({ text }: { text: string }) {
           )
         }
 
-        return <p key={lineIdx}>{parseInlineMarkdown(line)}</p>
+        return <p key={lineIdx}>{parseInlineMarkdown(cleaned)}</p>
       })}
     </div>
   )
@@ -267,12 +284,13 @@ export default function App() {
   const [query, setQuery] = useState('')
   const [activeQuery, setActiveQuery] = useState('')
   const [hasSearched, setHasSearched] = useState(false)
-  const [activeTab, setActiveTab] = useState<'all' | 'news' | 'images' | 'videos'>('all')
+  const [activeTab, setActiveTab] = useState<'all' | 'images' | 'news' | 'videos'>('all')
 
   // Search Results & AI Overview
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [aiSummary, setAiSummary] = useState('')
+  const [aiExpanded, setAiExpanded] = useState(false)
   const [searchTime, setSearchTime] = useState('0.28')
 
   // Krakenus AI Assistant Modal
@@ -330,7 +348,7 @@ export default function App() {
     }
   }, [chatMessages])
 
-  // Execute AI-Driven Search Response + Formatted Sources
+  // Execute AI Search with strict 5-line summary instruction
   const executeAiSearch = async (searchQueryText: string) => {
     const q = searchQueryText.trim()
     if (!q) {
@@ -338,6 +356,7 @@ export default function App() {
       setActiveQuery('')
       setResults([])
       setAiSummary('')
+      setAiExpanded(false)
       window.history.pushState(null, '', window.location.pathname)
       return
     }
@@ -347,29 +366,26 @@ export default function App() {
     setActiveQuery(q)
     setIsSearching(true)
     setAiSummary('')
+    setAiExpanded(false)
 
     // Update URL query string e.g. ?q=...
     const newUrl = `${window.location.pathname}?q=${encodeURIComponent(q)}`
     window.history.pushState(null, '', newUrl)
 
     const langName = lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'
-    const systemPrompt = `You are Krakenus AI, the search engine intelligence core for Octopus Search.
-The user's query is: "${q}".
+    const systemPrompt = `You are Krakenus AI Search Core.
+User search query: "${q}".
 
-Instructions:
-1. Provide a comprehensive, clear, expert AI Answer / Overview for this search query in ${langName}. Use bullet points, bold key terms, and 1-2-3 steps where helpful.
-2. At the end of your answer, output EXACTLY the line "---SOURCES---" followed by a JSON array of 4 relevant web sources.
-
-Example format:
-[Direct AI Answer Text Here]
-
----SOURCES---
+Strict Rules:
+1. Give a CONCISE, ultra-informative response in ${langName}. The response must start with the top 5 most critical points/lines (first 5 lines should contain the essential answer).
+2. Do NOT use markdown header tags like "###", do NOT output raw link brackets like "[http://...]", keep formatting extremely clean.
+3. At the end of your response, output EXACTLY "---SOURCES---" followed by a JSON array of 4 realistic web search items:
 [
   {
-    "title": "Заголовок страницы или рецепта",
-    "url": "https://example.com/page",
+    "title": "Заголовок страницы",
+    "url": "https://example.com/path",
     "domain": "example.com",
-    "snippet": "Краткое описание страницы или рецепта..."
+    "snippet": "Краткое описание страницы..."
   }
 ]`
 
@@ -407,7 +423,6 @@ Example format:
           setAiSummary(answerText)
 
           try {
-            // Match JSON block inside markdown if wrapped in ```json
             const jsonMatch = sourcesRaw.match(/\[[\s\S]*\]/)
             if (jsonMatch) {
               const parsed: any[] = JSON.parse(jsonMatch[0])
@@ -446,16 +461,16 @@ Example format:
     return [
       {
         id: 'fallback-1',
-        title: `${q} — Подробный материал и руководство`,
-        url: `https://google.com/search?q=${encodeURIComponent(q)}`,
-        domain: 'google.com',
-        snippet: `Полная информация, пошаговые инструкции и проверенные советы по запросу "${q}".`,
+        title: `${q} — Классическое пошаговое руководство`,
+        url: `https://eda.ru/recepty/search?q=${encodeURIComponent(q)}`,
+        domain: 'eda.ru',
+        snippet: `Полное пошаговое описание, ингредиенты и секреты успешного приготовления.`,
       },
       {
         id: 'fallback-2',
-        title: `Рецепты и статьи: ${q}`,
-        url: `https://eda.ru/recepty/search?q=${encodeURIComponent(q)}`,
-        domain: 'eda.ru',
+        title: `Как правильно приготовить: ${q}`,
+        url: `https://povarenok.ru/recipes/search/?q=${encodeURIComponent(q)}`,
+        domain: 'povarenok.ru',
         snippet: `Лучшие проверенные рецепты и кулинарные хитрости приготовления со свежими фото.`,
       },
       {
@@ -463,14 +478,14 @@ Example format:
         title: `Википедия — ${q}`,
         url: `https://ru.wikipedia.org/wiki/${encodeURIComponent(q)}`,
         domain: 'wikipedia.org',
-        snippet: `Материал из свободной энциклопедии: истории, классификации и подробные факты.`,
+        snippet: `Традиционный материал свободной энциклопедии: факты, варианты и классификация.`,
       },
       {
         id: 'fallback-4',
-        title: `Видео по запросу: ${q}`,
+        title: `Видео рецепт: ${q}`,
         url: `https://youtube.com/results?search_query=${encodeURIComponent(q)}`,
         domain: 'youtube.com',
-        snippet: `Смотрите обучающие ролики, рецепты и обзоры в высоком качестве.`,
+        snippet: `Смотрите обучающие видеоуроки в высоком качестве.`,
       },
     ]
   }
@@ -637,7 +652,6 @@ Example format:
       {/* STATE 1: GOOGLE HOME UI DESIGN */}
       {!hasSearched ? (
         <div className="google-home-layout">
-          {/* Top Bar Navigation */}
           <header className="google-home-header">
             <a href="https://octopus.dev" className="google-hub-link">
               <span>{t.backToHub}</span>
@@ -657,7 +671,6 @@ Example format:
             </div>
           </header>
 
-          {/* Centered Google Hero Section */}
           <main className="google-home-center">
             <div className="google-logo-wrapper">
               <OctopusMark />
@@ -728,7 +741,6 @@ Example format:
             </div>
           </main>
 
-          {/* Google Footer Bar */}
           <footer className="google-home-footer">
             <div className="google-footer-row google-footer-location">
               <MapPin size={13} />
@@ -737,55 +749,57 @@ Example format:
           </footer>
         </div>
       ) : (
-        /* STATE 2: GOOGLE SEARCH RESULTS UI DESIGN */
+        /* STATE 2: AUTHENTIC GOOGLE RESULTS VIEW WITH LEFT SEARCH BAR & COLLAPSIBLE AI OVERVIEW */
         <div className="google-results-layout">
-          {/* Top Google Results Header */}
+          {/* Top Google Results Header - Left Aligned Search Bar */}
           <header className="google-results-header">
-            <a
-              href="/"
-              className="google-results-logo"
-              onClick={(e) => {
-                e.preventDefault()
-                setQuery('')
-                executeAiSearch('')
-              }}
-            >
-              <OctopusMark compact />
-              <span className="results-logo-text">OCTOPUS <span>SEARCH</span></span>
-            </a>
+            <div className="google-header-left">
+              <a
+                href="/"
+                className="google-results-logo"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setQuery('')
+                  executeAiSearch('')
+                }}
+              >
+                <OctopusMark compact />
+                <span className="results-logo-text">OCTOPUS <span>SEARCH</span></span>
+              </a>
 
-            <form
-              className="google-top-search-form"
-              onSubmit={(e) => {
-                e.preventDefault()
-                executeAiSearch(query)
-              }}
-            >
-              <div className="google-top-pill">
-                <input
-                  type="text"
-                  className="google-top-input"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t.placeholder}
-                />
-                {query && (
-                  <button
-                    type="button"
-                    className="google-clear-btn"
-                    onClick={() => {
-                      setQuery('')
-                      executeAiSearch('')
-                    }}
-                  >
-                    <X size={16} />
+              <form
+                className="google-top-search-form"
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  executeAiSearch(query)
+                }}
+              >
+                <div className="google-top-pill">
+                  <input
+                    type="text"
+                    className="google-top-input"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder={t.placeholder}
+                  />
+                  {query && (
+                    <button
+                      type="button"
+                      className="google-clear-btn"
+                      onClick={() => {
+                        setQuery('')
+                        executeAiSearch('')
+                      }}
+                    >
+                      <X size={16} />
+                    </button>
+                  )}
+                  <button type="submit" className="google-top-submit-icon">
+                    <SearchIcon size={16} />
                   </button>
-                )}
-                <button type="submit" className="google-top-submit-icon">
-                  <SearchIcon size={16} />
-                </button>
-              </div>
-            </form>
+                </div>
+              </form>
+            </div>
 
             <div className="google-top-actions">
               <button
@@ -801,7 +815,7 @@ Example format:
             </div>
           </header>
 
-          {/* Google Sub-Navigation Bar (Tabs: Все, Новости, Картинки, Видео) */}
+          {/* Google Sub-Navigation Bar aligned with search bar */}
           <div className="google-tabs-bar">
             <div className="google-tabs-container">
               <button
@@ -814,19 +828,19 @@ Example format:
               </button>
               <button
                 type="button"
-                className={`google-tab ${activeTab === 'news' ? 'is-active' : ''}`}
-                onClick={() => setActiveTab('news')}
-              >
-                <Newspaper size={14} />
-                <span>{t.tabNews}</span>
-              </button>
-              <button
-                type="button"
                 className={`google-tab ${activeTab === 'images' ? 'is-active' : ''}`}
                 onClick={() => setActiveTab('images')}
               >
                 <ImageIcon size={14} />
                 <span>{t.tabImages}</span>
+              </button>
+              <button
+                type="button"
+                className={`google-tab ${activeTab === 'news' ? 'is-active' : ''}`}
+                onClick={() => setActiveTab('news')}
+              >
+                <Newspaper size={14} />
+                <span>{t.tabNews}</span>
               </button>
               <button
                 type="button"
@@ -839,13 +853,13 @@ Example format:
             </div>
           </div>
 
-          {/* Google Organic Search Results Area */}
+          {/* Google Main Results Area (Aligned Left like Google Desktop) */}
           <main className="google-results-main">
             <div className="google-stats-line">
-              <span>{t.resultsCount} {results.length * 1420} ({searchTime} сек.)</span>
+              <span>{t.resultsCount} {results.length * 1250 + 42} ({searchTime} сек.)</span>
             </div>
 
-            {/* GOOGLE AI OVERVIEW BOX */}
+            {/* GOOGLE AI OVERVIEW BOX - COLLAPSIBLE WITH 5-LINE DEFAULT MASK */}
             {(aiSummary || isSearching) && (
               <div className="google-ai-overview-card">
                 <div className="google-ai-overview-header">
@@ -861,9 +875,20 @@ Example format:
                     <p>{t.aiGenerating}</p>
                   </div>
                 ) : (
-                  <div className="google-ai-body">
-                    <FormattedAiText text={aiSummary} />
-                  </div>
+                  <>
+                    <div className={`google-ai-body ${!aiExpanded ? 'is-collapsed-mask' : ''}`}>
+                      <FormattedAiText text={aiSummary} />
+                    </div>
+
+                    <button
+                      type="button"
+                      className="google-ai-expand-btn"
+                      onClick={() => setAiExpanded((exp) => !exp)}
+                    >
+                      <span>{aiExpanded ? t.showLess : t.showMore}</span>
+                      {aiExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                    </button>
+                  </>
                 )}
               </div>
             )}

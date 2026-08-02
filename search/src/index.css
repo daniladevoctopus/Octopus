@@ -303,11 +303,18 @@ button { font: inherit; cursor: pointer; border: none; background: transparent; 
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  height: 64px;
+  height: 68px;
   padding: 0 24px;
-  background: rgba(10, 28, 28, 0.96);
+  background: rgba(10, 28, 28, 0.98);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(14px);
+}
+
+.google-header-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 900px;
 }
 
 .google-results-logo {
@@ -322,24 +329,26 @@ button { font: inherit; cursor: pointer; border: none; background: transparent; 
 }
 .results-logo-text span { color: var(--coral); }
 
+/* Google Top Search Bar Left Aligned Next to Logo */
 .google-top-search-form {
   flex: 1;
-  max-width: 652px;
+  max-width: 680px;
+  margin-left: 28px;
 }
 
 .google-top-pill {
   display: flex;
   align-items: center;
-  height: 40px;
-  padding: 0 6px 0 16px;
+  height: 44px;
+  padding: 0 8px 0 18px;
   background: rgba(5, 14, 14, 0.95);
   border: 1px solid rgba(243, 240, 231, 0.22);
-  border-radius: 20px;
+  border-radius: 22px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .google-top-pill:focus-within {
   border-color: var(--coral);
-  box-shadow: 0 0 14px rgba(239, 116, 95, 0.25);
+  box-shadow: 0 0 16px rgba(239, 116, 95, 0.25);
 }
 
 .google-top-input {
@@ -348,15 +357,15 @@ button { font: inherit; cursor: pointer; border: none; background: transparent; 
   border: none;
   color: #ffffff;
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
 }
 
 .google-top-submit-icon {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   color: var(--coral);
   border-radius: 50%;
   transition: transform 0.2s;
@@ -370,15 +379,15 @@ button { font: inherit; cursor: pointer; border: none; background: transparent; 
   flex: none;
 }
 
-/* Google Tab Navigation Bar */
+/* Google Tab Navigation Bar Aligned with Left Column */
 .google-tabs-bar {
   position: fixed;
-  top: 64px;
+  top: 68px;
   left: 0;
   right: 0;
   z-index: 90;
-  height: 42px;
-  background: rgba(10, 28, 28, 0.92);
+  height: 44px;
+  background: rgba(10, 28, 28, 0.95);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(12px);
 }
@@ -386,10 +395,9 @@ button { font: inherit; cursor: pointer; border: none; background: transparent; 
 .google-tabs-container {
   display: flex;
   align-items: center;
-  gap: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 24px;
+  gap: 24px;
+  margin-left: clamp(20px, 12vw, 170px);
+  padding: 0 20px;
   height: 100%;
 }
 
@@ -423,23 +431,24 @@ button { font: inherit; cursor: pointer; border: none; background: transparent; 
 /* Google Main Results Body (Left Aligned Column) */
 .google-results-main {
   max-width: 652px;
-  margin: 0 0 0 clamp(20px, 12vw, 170px);
-  padding: 120px 20px 80px;
+  margin-left: clamp(20px, 12vw, 170px);
+  padding: 130px 20px 80px;
 }
 
 .google-stats-line {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   font-size: 12px;
   color: rgba(243, 240, 231, 0.5);
 }
 
-/* GOOGLE AI OVERVIEW BOX (SUBTLE MODERN AI CARD) */
+/* GOOGLE AI OVERVIEW BOX - WITH 5-LINE COLLAPSIBLE MASK */
 .google-ai-overview-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 20px 22px;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
   background: rgba(14, 38, 38, 0.95);
   border: 1px solid rgba(197, 218, 104, 0.4);
   border-left: 4px solid var(--lime);
@@ -485,9 +494,49 @@ button { font: inherit; cursor: pointer; border: none; background: transparent; 
 }
 
 .google-ai-body {
+  position: relative;
   font-size: 14px;
   line-height: 1.65;
   color: rgba(243, 240, 231, 0.92);
+  transition: max-height 0.35s ease;
+}
+
+/* Collapsible Mask for Top 5 Lines */
+.google-ai-body.is-collapsed-mask {
+  max-height: 140px;
+  overflow: hidden;
+}
+
+.google-ai-body.is-collapsed-mask::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent 0%, rgba(14, 38, 38, 0.98) 100%);
+  pointer-events: none;
+}
+
+.google-ai-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lime);
+  background: rgba(197, 218, 104, 0.12);
+  border: 1px solid rgba(197, 218, 104, 0.28);
+  border-radius: 14px;
+  transition: background-color 0.2s, transform 0.2s;
+  align-self: flex-start;
+}
+.google-ai-expand-btn:hover {
+  background: rgba(197, 218, 104, 0.22);
+  transform: translateY(-1px);
 }
 
 /* CLASSIC ORGANIC GOOGLE SEARCH RESULT ITEMS */
@@ -676,8 +725,9 @@ button { font: inherit; cursor: pointer; border: none; background: transparent; 
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .google-results-main { margin: 0; padding: 110px 16px 60px; max-width: 100%; }
-  .google-top-search-form { max-width: none; }
-  .google-cite-url { max-width: 260px; }
+  .google-top-search-form { margin-left: 12px; max-width: none; }
+  .google-tabs-container,
+  .google-results-main { margin-left: 0; padding-left: 16px; padding-right: 16px; max-width: 100%; }
+  .google-cite-url { max-width: 240px; }
   .google-logo-text { font-size: 32px; }
 }
