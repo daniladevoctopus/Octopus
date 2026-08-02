@@ -20,19 +20,12 @@ import {
   X,
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { searchOctopusEngine } from './services/searchEngine'
+import { IndexEntry } from './data/searchIndex'
 
 export type Language = 'ru' | 'en' | 'uk'
 
-interface SearchResultItem {
-  id: string
-  title: string
-  url: string
-  domain: string
-  snippet: string
-  imageUrl?: string
-  category?: string
-  date?: string
-}
+interface SearchResultItem extends IndexEntry {}
 
 interface ChatMessage {
   sender: 'user' | 'ai'
@@ -59,7 +52,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Видео',
     tabMaps: 'Карты',
     aiOverviewTitle: 'Krakenus AI — Обзор с помощью ИИ',
-    aiGenerating: 'Выполнение живого веб-поиска и ИИ-обзора...',
+    aiGenerating: 'Поиск в индексе Octopus и генерация ИИ-выжимки...',
     showMore: 'Показать полностью',
     showLess: 'Свернуть',
     quickQueries: [
@@ -69,14 +62,14 @@ const SEARCH_TRANSLATIONS = {
       'Документация TanStack Start',
     ],
     resultsCount: 'Результатов: примерно',
-    searchSecNotice: 'Octopus Search — Умная фильтрация информации без шума.',
+    searchSecNotice: 'Octopus Search Engine — Родная поисковая система Octopus без спама.',
     backToHub: 'octopus.dev',
     footerLocation: 'Украина / Global — Из вашего местоположения',
-    settingsTitle: 'Настройки реального поиска API',
+    settingsTitle: 'Настройки поискового движка Octopus',
     krakenusAi: {
       title: 'Krakenus AI',
-      subtitle: 'ИИ-ассистент Octopus Search',
-      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом реального веб-поиска и формированием выжимок.',
+      subtitle: 'ИИ-ассистент Octopus Search Engine',
+      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом поискового индекса Octopus.',
       placeholder: 'Задайте вопрос...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
@@ -97,7 +90,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Videos',
     tabMaps: 'Maps',
     aiOverviewTitle: 'Krakenus AI — AI Overview',
-    aiGenerating: 'Fetching live web search results & AI Overview...',
+    aiGenerating: 'Searching Octopus Index & AI Overview...',
     showMore: 'Show more',
     showLess: 'Show less',
     quickQueries: [
@@ -107,14 +100,14 @@ const SEARCH_TRANSLATIONS = {
       'TanStack Start documentation',
     ],
     resultsCount: 'About',
-    searchSecNotice: 'Octopus Search — Smart noise-free search engine.',
+    searchSecNotice: 'Octopus Search Engine — Native noise-free search index.',
     backToHub: 'octopus.dev',
     footerLocation: 'Global — From your location',
-    settingsTitle: 'Real Search API Settings',
+    settingsTitle: 'Octopus Search Engine Settings',
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'Octopus Search AI Core',
-      welcome: 'Hello! I am **Krakenus AI**. I help analyze real web search data.',
+      welcome: 'Hello! I am **Krakenus AI**. I help analyze native Octopus index search data.',
       placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
@@ -135,7 +128,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Відео',
     tabMaps: 'Карти',
     aiOverviewTitle: 'Krakenus AI — Огляд за допомогою ШІ',
-    aiGenerating: 'Выконання живого веб-пошуку та ШІ-огляду...',
+    aiGenerating: 'Пошук в індексі Octopus та ШІ-огляд...',
     showMore: 'Показати повністю',
     showLess: 'Згорнути',
     quickQueries: [
@@ -145,14 +138,14 @@ const SEARCH_TRANSLATIONS = {
       'Документація TanStack Start',
     ],
     resultsCount: 'Результатів: приблизно',
-    searchSecNotice: 'Octopus Search — Розумне фільтрування інформації від спаму.',
+    searchSecNotice: 'Octopus Search Engine — Рідна пошукова система Octopus.',
     backToHub: 'octopus.dev',
     footerLocation: 'Україна / Global — З вашого розташування',
-    settingsTitle: 'Налаштування реального пошуку API',
+    settingsTitle: 'Налаштування пошукового рушія Octopus',
     krakenusAi: {
       title: 'Krakenus AI',
-      subtitle: 'ШІ-асистент Octopus Search',
-      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом реального веб-пошуку.',
+      subtitle: 'ШІ-асистент Octopus Search Engine',
+      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом пошукового індексу Octopus.',
       placeholder: 'Задайте питання...',
       quickTitle: 'Підказки:',
       quickPrompts: [
@@ -163,121 +156,6 @@ const SEARCH_TRANSLATIONS = {
       clearTooltip: 'Очистити історію',
     },
   },
-}
-
-// RELIABLE GUARANTEED HIGH-RESOLUTION TOPIC IMAGE POOLS (WITH NO-REFERRER POLICY)
-const AUTHENTIC_ROBLOX_IMAGES = [
-  'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1580234811497-9df7fd2f357e?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1552824728-8b138132f584?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop&q=80',
-]
-
-const AUTHENTIC_PANCAKE_IMAGES = [
-  'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1506084868230-bb9d95c24759?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1579372786545-d24232daf58c?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1484723091479-0015999052d9?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&auto=format&fit=crop&q=80',
-]
-
-const AUTHENTIC_TECH_IMAGES = [
-  'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&auto=format&fit=crop&q=80',
-]
-
-function getTopicImageForQuery(query: string, index: number): string {
-  const lower = query.toLowerCase()
-
-  if (lower.includes('roblox') || lower.includes('роблокс')) {
-    return AUTHENTIC_ROBLOX_IMAGES[index % AUTHENTIC_ROBLOX_IMAGES.length]
-  }
-
-  if (lower.includes('блинчик') || lower.includes('млинц') || lower.includes('pancake') || lower.includes('рецепт') || lower.includes('еда')) {
-    return AUTHENTIC_PANCAKE_IMAGES[index % AUTHENTIC_PANCAKE_IMAGES.length]
-  }
-
-  return AUTHENTIC_TECH_IMAGES[index % AUTHENTIC_TECH_IMAGES.length]
-}
-
-// 1. DuckDuckGo Instant Web Search API
-async function fetchDuckDuckGoLiveResults(q: string): Promise<SearchResultItem[]> {
-  try {
-    const res = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_html=1&skip_disambig=1`)
-    if (res.ok) {
-      const data = await res.json()
-      const items: SearchResultItem[] = []
-
-      if (data.RelatedTopics && Array.isArray(data.RelatedTopics)) {
-        data.RelatedTopics.forEach((topic: any, idx: number) => {
-          if (topic.FirstURL && topic.Text) {
-            const url = topic.FirstURL
-            let domain = 'web.search'
-            try {
-              domain = new URL(url).hostname.replace('www.', '')
-            } catch (e) {}
-
-            items.push({
-              id: `ddg-${idx}`,
-              title: topic.Text.split(' - ')[0] || topic.Text.slice(0, 65),
-              url: url,
-              domain: domain,
-              snippet: topic.Text,
-              imageUrl: getTopicImageForQuery(q, idx),
-            })
-          }
-        })
-      }
-      if (items.length > 0) return items
-    }
-  } catch (e) {
-    // ignore
-  }
-  return []
-}
-
-// 2. Google Custom Search JSON API Integration
-async function fetchGoogleCustomSearchResults(q: string, apiKey: string, cxId: string): Promise<SearchResultItem[]> {
-  if (!apiKey || !cxId) return []
-  try {
-    const url = `https://www.googleapis.com/customsearch/v1?key=${encodeURIComponent(apiKey)}&cx=${encodeURIComponent(cxId)}&q=${encodeURIComponent(q)}&num=10`
-    const res = await fetch(url)
-    if (res.ok) {
-      const data = await res.json()
-      if (data.items && Array.isArray(data.items)) {
-        return data.items.map((item: any, idx: number) => ({
-          id: `gcs-${idx}`,
-          title: item.title || item.htmlTitle,
-          url: item.link,
-          domain: item.displayLink || new URL(item.link).hostname,
-          snippet: item.snippet || item.htmlSnippet,
-          imageUrl: item.pagemap?.cse_image?.[0]?.src || item.pagemap?.cse_thumbnail?.[0]?.src || getTopicImageForQuery(q, idx),
-        }))
-      }
-    }
-  } catch (e) {
-    console.error('Google Custom Search API error:', e)
-  }
-  return []
 }
 
 function cleanMarkdownLine(raw: string): string {
@@ -404,20 +282,12 @@ export default function App() {
   const [hasSearched, setHasSearched] = useState(false)
   const [activeTab, setActiveTab] = useState<'all' | 'images' | 'news' | 'videos'>('all')
 
-  // API Credentials Modal
-  const [settingsOpen, setSettingsOpen] = useState(false)
-  const [googleApiKey, setGoogleApiKey] = useState(() => localStorage.getItem('octopus_gcs_key') || '')
-  const [googleCxId, setGoogleCxId] = useState(() => localStorage.getItem('octopus_gcs_cx') || '')
-
   // Search Results & AI Overview
   const [results, setResults] = useState<SearchResultItem[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const [aiSummary, setAiSummary] = useState('')
   const [aiExpanded, setAiExpanded] = useState(false)
-  const [searchTime, setSearchTime] = useState('0.34')
-
-  // Retry state & countdown
-  const [attemptStatus, setAttemptStatus] = useState('')
+  const [searchTime, setSearchTime] = useState('0.14')
 
   // Krakenus AI Assistant Modal
   const [aiModalOpen, setAiModalOpen] = useState(false)
@@ -451,19 +321,13 @@ export default function App() {
     const qParam = params.get('q')
     if (qParam) {
       setQuery(qParam)
-      executeAiSearch(qParam)
+      executeOctopusSearch(qParam)
     }
   }, [])
 
   const handleSetLang = (newLang: Language) => {
     setLang(newLang)
     localStorage.setItem('octopus_lang', newLang)
-  }
-
-  const handleSaveApiSettings = () => {
-    localStorage.setItem('octopus_gcs_key', googleApiKey)
-    localStorage.setItem('octopus_gcs_cx', googleCxId)
-    setSettingsOpen(false)
   }
 
   const t = SEARCH_TRANSLATIONS[lang]
@@ -480,48 +344,8 @@ export default function App() {
     }
   }, [chatMessages])
 
-  // Helper to generate dynamic fallback for query `q`
-  const generateDynamicFallbackItem = (q: string, idx: number): SearchResultItem => {
-    const cleanQ = q.trim()
-    const domains = [
-      'roblox.com',
-      'help.roblox.com',
-      'play.google.com',
-      'apps.apple.com',
-      'techblog.ru',
-      'roblox.fandom.com',
-      'wikipedia.org',
-      'habr.com',
-      'youtube.com',
-      'microsoft.com',
-    ]
-
-    const titles = [
-      `Загрузить ${cleanQ} для ПК — Официальный сайт`,
-      `${cleanQ} — Играть онлайн бесплатно`,
-      `Скачать ${cleanQ} на Android — Google Play`,
-      `${cleanQ} для iOS — App Store`,
-      `Как установить ${cleanQ} на компьютер — Инструкция`,
-      `${cleanQ} Mobile — Скачать приложение`,
-      `Безопасное скачивание ${cleanQ} — Руководство`,
-      `${cleanQ} Wiki — Все способы и системные требования`,
-      `Обзор и системные требования ${cleanQ}`,
-      `Решение проблем и установка ${cleanQ} на Windows`,
-    ]
-
-    const domain = domains[idx % domains.length]
-    return {
-      id: `dyn-fb-${idx}`,
-      title: titles[idx % titles.length],
-      url: `https://${domain}/search?q=${encodeURIComponent(cleanQ)}`,
-      domain: domain,
-      snippet: `Подробная официальная инструкция, пошаговое руководство по скачиванию и установке ${cleanQ}.`,
-      imageUrl: getTopicImageForQuery(cleanQ, idx),
-    }
-  }
-
-  // Execute HYBRID SEARCH: Live Web Search (Google API / DuckDuckGo) + Krakenus AI Overview
-  const executeAiSearch = async (searchQueryText: string) => {
+  // EXECUTE OCTOPUS SEARCH ENGINE
+  const executeOctopusSearch = async (searchQueryText: string) => {
     const q = searchQueryText.trim()
     if (!q) {
       setHasSearched(false)
@@ -529,7 +353,6 @@ export default function App() {
       setResults([])
       setAiSummary('')
       setAiExpanded(false)
-      setAttemptStatus('')
       window.history.pushState(null, '', window.location.pathname)
       return
     }
@@ -540,145 +363,59 @@ export default function App() {
     setIsSearching(true)
     setAiSummary('')
     setAiExpanded(false)
-    setAttemptStatus('')
 
     const newUrl = `${window.location.pathname}?q=${encodeURIComponent(q)}`
     window.history.pushState(null, '', newUrl)
 
-    // 1. Attempt Real Live Web Search via Google Custom Search API or DuckDuckGo API
-    let liveWebResults: SearchResultItem[] = []
-    if (googleApiKey && googleCxId) {
-      liveWebResults = await fetchGoogleCustomSearchResults(q, googleApiKey, googleCxId)
-    }
-    if (liveWebResults.length === 0) {
-      liveWebResults = await fetchDuckDuckGoLiveResults(q)
-    }
+    // 1. Run Octopus Search Index Engine (TF-IDF & Category Intent Classifier)
+    const searchResults = searchOctopusEngine(q)
+    setResults(searchResults)
 
+    const endTime = performance.now()
+    setSearchTime(((endTime - startTime) / 1000).toFixed(2))
+
+    // 2. Synthesize AI Overview using OpenRouter
     const langName = lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'
-    const systemPrompt = `You are Krakenus AI Search Engine Core.
+    const systemPrompt = `You are Krakenus AI, the intelligent engine of Octopus Search.
 User query: "${q}".
 
 Strict Rules:
 1. Provide a CONCISE, ultra-useful AI Overview in ${langName}. Must start with top 5 key points.
 2. Do NOT output raw markdown headers ("###") or link brackets "[http://...]".
-3. At the end, output EXACTLY "---SOURCES---" followed by a JSON array of EXACTLY 10 relevant web search result items matching "${q}".
+3. Provide essential facts matching the query context.`
 
-JSON Format:
-[
-  {
-    "title": "Заголовок страницы",
-    "url": "https://example.com/page",
-    "domain": "example.com",
-    "snippet": "Описание..."
-  }
-]`
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'HTTP-Referer': 'https://octopus.dev',
+          'X-Title': 'Octopus Search',
+        },
+        body: JSON.stringify({
+          model: MODEL_NAME,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: q },
+          ],
+          stream: false,
+        }),
+      })
 
-    let attempt = 0
-    const maxAttempts = 5
-    let success = false
-
-    while (attempt < maxAttempts && !success) {
-      attempt++
-      if (attempt > 1) {
-        setAttemptStatus(`Попытка ${attempt} из ${maxAttempts}...`)
+      if (response.ok) {
+        const data = await response.json()
+        const fullContent: string = data.choices?.[0]?.message?.content || ''
+        setAiSummary(fullContent)
+      } else {
+        setAiSummary(`Подробный разбор по запросу "${q}". Используйте представленные ниже сайты.`)
       }
-
-      try {
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-            'HTTP-Referer': 'https://octopus.dev',
-            'X-Title': 'Octopus Search',
-          },
-          body: JSON.stringify({
-            model: MODEL_NAME,
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: q },
-            ],
-            stream: false,
-          }),
-        })
-
-        const endTime = performance.now()
-        setSearchTime(((endTime - startTime) / 1000).toFixed(2))
-
-        if (response.ok) {
-          const data = await response.json()
-          const fullContent: string = data.choices?.[0]?.message?.content || ''
-
-          if (fullContent.includes('---SOURCES---')) {
-            const parts = fullContent.split('---SOURCES---')
-            const answerText = parts[0].trim()
-            const sourcesRaw = parts[1].trim()
-
-            setAiSummary(answerText)
-
-            try {
-              const jsonMatch = sourcesRaw.match(/\[[\s\S]*\]/)
-              let finalResults: SearchResultItem[] = []
-
-              if (liveWebResults.length > 0) {
-                finalResults = liveWebResults
-              } else if (jsonMatch) {
-                const parsed: any[] = JSON.parse(jsonMatch[0])
-                finalResults = parsed.map((item, idx) => ({
-                  id: `ai-src-${idx}`,
-                  title: item.title || item.domain || `Результат ${idx + 1}`,
-                  url: item.url || `https://${item.domain || 'google.com'}`,
-                  domain: item.domain || 'web.search',
-                  snippet: item.snippet || 'Подробная информация по вашему запросу.',
-                  imageUrl: getTopicImageForQuery(q, idx),
-                }))
-              }
-
-              while (finalResults.length < 10) {
-                finalResults.push(generateDynamicFallbackItem(q, finalResults.length))
-              }
-
-              setResults(finalResults.slice(0, 10))
-              success = true
-              break
-            } catch (jsonErr) {
-              const fallbackList = liveWebResults.length > 0 ? liveWebResults : Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i))
-              while (fallbackList.length < 10) fallbackList.push(generateDynamicFallbackItem(q, fallbackList.length))
-              setResults(fallbackList.slice(0, 10))
-              success = true
-              break
-            }
-          } else {
-            setAiSummary(fullContent)
-            const fallbackList = liveWebResults.length > 0 ? liveWebResults : Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i))
-            while (fallbackList.length < 10) fallbackList.push(generateDynamicFallbackItem(q, fallbackList.length))
-            setResults(fallbackList.slice(0, 10))
-            success = true
-            break
-          }
-        }
-      } catch (e) {
-        console.error(`Attempt ${attempt} error:`, e)
-      }
-
-      if (!success && attempt < maxAttempts) {
-        for (let sec = 5; sec > 0; sec--) {
-          setAttemptStatus(`Не удалось. Повторная попытка (${attempt}/${maxAttempts}) через ${sec} сек...`)
-          await new Promise((r) => setTimeout(r, 1000))
-        }
-      }
+    } catch (e) {
+      console.error('AI Overview fetch error:', e)
+      setAiSummary(`Подробный разбор по запросу "${q}". Используйте представленные ниже сайты.`)
+    } finally {
+      setIsSearching(false)
     }
-
-    if (!success) {
-      setAttemptStatus('')
-      setAiSummary(`Запрос обработан по базе данных Octopus Search.`)
-      const fallbackList = liveWebResults.length > 0 ? liveWebResults : Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i))
-      while (fallbackList.length < 10) fallbackList.push(generateDynamicFallbackItem(q, fallbackList.length))
-      setResults(fallbackList.slice(0, 10))
-    }
-
-    setIsSearching(false)
-    setAttemptStatus('')
   }
 
   const handleSendAiMessage = async (textToSend?: string) => {
@@ -739,62 +476,6 @@ JSON Format:
 
   return (
     <div className="search-app-root">
-      {/* SEARCH API SETTINGS MODAL */}
-      {settingsOpen && (
-        <div className="ai-modal-backdrop" onClick={() => setSettingsOpen(false)}>
-          <div className="ai-modal-card" style={{ height: 'auto', maxHeight: '90vh' }} onClick={(e) => e.stopPropagation()}>
-            <div className="ai-modal-header">
-              <div className="ai-title-group">
-                <Settings size={20} style={{ color: 'var(--coral)' }} />
-                <h3>{t.settingsTitle}</h3>
-              </div>
-              <button type="button" className="geo-close-btn" onClick={() => setSettingsOpen(false)}>
-                <X size={16} />
-              </button>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '13px', color: 'rgba(243, 240, 231, 0.85)' }}>
-              <p style={{ margin: 0, lineHeight: 1.5 }}>
-                Вы можете подключить <strong>Google Custom Search API</strong> для получения 100% реальных живых ссылок из индекса Google!
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontWeight: 600, color: 'var(--lime)', fontSize: '12px' }}>Google Custom Search API Key:</label>
-                <input
-                  type="password"
-                  className="ai-input-field"
-                  style={{ background: 'rgba(5, 14, 14, 0.95)', border: '1px solid rgba(243, 240, 231, 0.2)', padding: '10px 14px', borderRadius: '10px' }}
-                  placeholder="AIzaSy..."
-                  value={googleApiKey}
-                  onChange={(e) => setGoogleApiKey(e.target.value)}
-                />
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <label style={{ fontWeight: 600, color: 'var(--lime)', fontSize: '12px' }}>Search Engine ID (CX):</label>
-                <input
-                  type="text"
-                  className="ai-input-field"
-                  style={{ background: 'rgba(5, 14, 14, 0.95)', border: '1px solid rgba(243, 240, 231, 0.2)', padding: '10px 14px', borderRadius: '10px' }}
-                  placeholder="0175766625..."
-                  value={googleCxId}
-                  onChange={(e) => setGoogleCxId(e.target.value)}
-                />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
-                <button type="button" className="google-btn" onClick={() => setSettingsOpen(false)}>
-                  Отмена
-                </button>
-                <button type="button" className="google-btn" style={{ background: 'var(--coral)', borderColor: 'var(--coral)' }} onClick={handleSaveApiSettings}>
-                  Сохранить
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* KRAKENUS AI ASSISTANT MODAL */}
       {aiModalOpen && (
         <div className="ai-modal-backdrop" onClick={() => setAiModalOpen(false)}>
@@ -908,16 +589,6 @@ JSON Format:
               <button
                 type="button"
                 className="ai-trigger-btn"
-                onClick={() => setSettingsOpen(true)}
-                title="Настройки API поиска"
-              >
-                <Settings size={14} />
-                <span>API Settings</span>
-              </button>
-
-              <button
-                type="button"
-                className="ai-trigger-btn"
                 onClick={() => setAiModalOpen(true)}
               >
                 <Bot size={15} />
@@ -938,7 +609,7 @@ JSON Format:
               className="google-search-bar-form"
               onSubmit={(e) => {
                 e.preventDefault()
-                executeAiSearch(query)
+                executeOctopusSearch(query)
               }}
             >
               <div className="google-search-input-pill">
@@ -972,7 +643,7 @@ JSON Format:
                   onClick={() => {
                     const randomQuery = t.quickQueries[Math.floor(Math.random() * t.quickQueries.length)]
                     setQuery(randomQuery)
-                    executeAiSearch(randomQuery)
+                    executeOctopusSearch(randomQuery)
                   }}
                 >
                   {t.btnLucky}
@@ -988,7 +659,7 @@ JSON Format:
                   className="google-chip-link"
                   onClick={() => {
                     setQuery(q)
-                    executeAiSearch(q)
+                    executeOctopusSearch(q)
                   }}
                 >
                   <SearchIcon size={12} />
@@ -1016,7 +687,7 @@ JSON Format:
                 onClick={(e) => {
                   e.preventDefault()
                   setQuery('')
-                  executeAiSearch('')
+                  executeOctopusSearch('')
                 }}
               >
                 <OctopusMark compact />
@@ -1027,7 +698,7 @@ JSON Format:
                 className="google-top-search-form"
                 onSubmit={(e) => {
                   e.preventDefault()
-                  executeAiSearch(query)
+                  executeOctopusSearch(query)
                 }}
               >
                 <div className="google-top-pill">
@@ -1044,7 +715,7 @@ JSON Format:
                       className="google-clear-btn"
                       onClick={() => {
                         setQuery('')
-                        executeAiSearch('')
+                        executeOctopusSearch('')
                       }}
                     >
                       <X size={16} />
@@ -1058,15 +729,6 @@ JSON Format:
             </div>
 
             <div className="google-top-actions">
-              <button
-                type="button"
-                className="ai-trigger-btn"
-                onClick={() => setSettingsOpen(true)}
-                title="Настройки API поиска"
-              >
-                <Settings size={14} />
-              </button>
-
               <button
                 type="button"
                 className="ai-trigger-btn"
@@ -1137,7 +799,7 @@ JSON Format:
                     {isSearching ? (
                       <div className="google-ai-loading">
                         <span className="pulse-dot" />
-                        <p>{attemptStatus || t.aiGenerating}</p>
+                        <p>{t.aiGenerating}</p>
                       </div>
                     ) : (
                       <>
@@ -1158,10 +820,10 @@ JSON Format:
                   </div>
                 )}
 
-                {/* EXACTLY 10 ORGANIC SITES LIST WITH GUARANTEED RELIABLE IMAGES */}
+                {/* EXACTLY 10 ORGANIC SITES LIST FROM OCTOPUS SEARCH INDEX */}
                 <div className="google-organic-list">
                   {results.length > 0 ? (
-                    results.map((item, index) => (
+                    results.map((item) => (
                       <article key={item.id} className="google-result-item">
                         <div className="google-result-card-inner">
                           <div className="google-result-content-col">
@@ -1191,11 +853,6 @@ JSON Format:
                                 alt={item.title}
                                 loading="lazy"
                                 referrerPolicy="no-referrer"
-                                onError={(e) => {
-                                  const target = e.currentTarget
-                                  target.onerror = null
-                                  target.src = getTopicImageForQuery(activeQuery, index)
-                                }}
                               />
                             </div>
                           )}
@@ -1214,7 +871,7 @@ JSON Format:
             {/* TAB 2: GOOGLE IMAGES TAB GRID */}
             {activeTab === 'images' && (
               <div className="google-images-grid-view">
-                {results.map((item, index) => (
+                {results.map((item) => (
                   <a
                     key={item.id}
                     href={item.url}
@@ -1224,15 +881,10 @@ JSON Format:
                   >
                     <div className="image-card-preview">
                       <img
-                        src={item.imageUrl || getTopicImageForQuery(activeQuery, index)}
+                        src={item.imageUrl}
                         alt={item.title}
                         loading="lazy"
                         referrerPolicy="no-referrer"
-                        onError={(e) => {
-                          const target = e.currentTarget
-                          target.onerror = null
-                          target.src = getTopicImageForQuery(activeQuery, index)
-                        }}
                       />
                     </div>
                     <div className="image-card-info">
