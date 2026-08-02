@@ -58,7 +58,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Видео',
     tabMaps: 'Карты',
     aiOverviewTitle: 'Krakenus AI — Обзор с помощью ИИ',
-    aiGenerating: 'Поиск и генерация 10 сайтов...',
+    aiGenerating: 'Поиск тематических изображений и 10 джерел...',
     showMore: 'Показать полностью',
     showLess: 'Свернуть',
     quickQueries: [
@@ -74,7 +74,7 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ИИ-ассистент Octopus Search',
-      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом и поиском до 10 релевантных сайтов.',
+      welcome: 'Привет! Я **Krakenus AI**. Помогаю с анализом и поиском до 10 релевантных сайтов и картинок по вашей теме.',
       placeholder: 'Задайте вопрос...',
       quickTitle: 'Подсказки:',
       quickPrompts: [
@@ -95,7 +95,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Videos',
     tabMaps: 'Maps',
     aiOverviewTitle: 'Krakenus AI — AI Overview',
-    aiGenerating: 'Generating concise AI summary & 10 top results...',
+    aiGenerating: 'Generating concise AI summary & 10 top results with topic images...',
     showMore: 'Show more',
     showLess: 'Show less',
     quickQueries: [
@@ -111,7 +111,7 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'Octopus Search AI Core',
-      welcome: 'Hello! I am **Krakenus AI**. I help summarize and find top 10 sites.',
+      welcome: 'Hello! I am **Krakenus AI**. I help summarize and find top 10 sites with matching topic images.',
       placeholder: 'Ask a question...',
       quickTitle: 'Quick prompts:',
       quickPrompts: [
@@ -132,7 +132,7 @@ const SEARCH_TRANSLATIONS = {
     tabVideos: 'Відео',
     tabMaps: 'Карти',
     aiOverviewTitle: 'Krakenus AI — Огляд за допомогою ШІ',
-    aiGenerating: 'Генерація відповіді ШІ та 10 сайтів...',
+    aiGenerating: 'Генерація відповіді ШІ, картинок та 10 сайтів...',
     showMore: 'Показати повністю',
     showLess: 'Згорнути',
     quickQueries: [
@@ -148,7 +148,7 @@ const SEARCH_TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ШІ-асистент Octopus Search',
-      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом та добіркою до 10 сайтів.',
+      welcome: 'Вітаю! Я **Krakenus AI**. Допомагаю з аналізом та добіркою до 10 сайтів та тематичних картинок.',
       placeholder: 'Задайте питання...',
       quickTitle: 'Підказки:',
       quickPrompts: [
@@ -161,22 +161,40 @@ const SEARCH_TRANSLATIONS = {
   },
 }
 
-// Guaranteed working Unsplash image fallbacks
-const TOPIC_FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&auto=format&fit=crop&q=80',
-]
+// Fetch real topic-matching images using Wikimedia Commons API & LoremFlickr keyword search
+async function fetchRealTopicImages(searchQuery: string): Promise<string[]> {
+  const images: string[] = []
+  const cleanKeyword = searchQuery
+    .toLowerCase()
+    .replace(/скачать|на пк|бесплатно|как|приготовить|игры|игра/g, '')
+    .trim() || searchQuery
 
-function getTopicFallbackImage(q: string, index: number): string {
-  return TOPIC_FALLBACK_IMAGES[index % TOPIC_FALLBACK_IMAGES.length]
+  // 1. Try Wikimedia Commons API for exact query topic photos
+  try {
+    const wikiUrl = `https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(cleanKeyword)}&gsrlimit=12&prop=pageimages&piprop=thumbnail&pithumbsize=600&format=json&origin=*`
+    const res = await fetch(wikiUrl)
+    if (res.ok) {
+      const data = await res.json()
+      const pages = data?.query?.pages
+      if (pages) {
+        for (const key in pages) {
+          const thumb = pages[key]?.thumbnail?.source
+          if (thumb && !thumb.endsWith('.svg')) {
+            images.push(thumb)
+          }
+        }
+      }
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  // 2. Keyword-based topic fallback images
+  for (let i = 1; i <= 10; i++) {
+    images.push(`https://loremflickr.com/600/400/${encodeURIComponent(cleanKeyword)}?lock=${i * 7}`)
+  }
+
+  return images
 }
 
 function cleanMarkdownLine(raw: string): string {
@@ -369,32 +387,32 @@ export default function App() {
   }, [chatMessages])
 
   // Helper to generate dynamic fallback for query `q`
-  const generateDynamicFallbackItem = (q: string, idx: number): SearchResultItem => {
+  const generateDynamicFallbackItem = (q: string, idx: number, topicImages: string[]): SearchResultItem => {
     const cleanQ = q.trim()
     const domains = [
-      'wikipedia.org',
-      'google.com',
-      'habr.com',
-      'github.com',
-      'medium.com',
-      'reddit.com',
-      'youtube.com',
       'roblox.com',
+      'help.roblox.com',
+      'play.google.com',
+      'apps.apple.com',
+      'techblog.ru',
+      'roblox.fandom.com',
+      'wikipedia.org',
+      'habr.com',
+      'youtube.com',
       'microsoft.com',
-      'stackoverflow.com',
     ]
 
     const titles = [
-      `${cleanQ} — Официальная страница и главное руководство`,
-      `Все о ${cleanQ}: Обзор, характеристики и новости`,
-      `Как установить и настроить ${cleanQ} — Пошаговая инструкция`,
-      `Часто задаваемые вопросы по ${cleanQ}`,
-      `${cleanQ} в деталях — Руководство для пользователей`,
-      `Скачать и запустить ${cleanQ} бесплатно`,
-      `Форум и сообщество ${cleanQ}: Советы и решение проблем`,
-      `Видеообзор и уроки по ${cleanQ}`,
-      `Сравнение и альтернативы для ${cleanQ}`,
-      `Технические требования и поддержка ${cleanQ}`,
+      `Загрузить ${cleanQ} для ПК — Официальный сайт`,
+      `${cleanQ} — Играть онлайн бесплатно`,
+      `Скачать ${cleanQ} на Android — Google Play`,
+      `${cleanQ} для iOS — App Store`,
+      `Как установить ${cleanQ} на компьютер — Инструкция`,
+      `${cleanQ} Mobile — Скачать приложение`,
+      `Безопасное скачивание ${cleanQ} — Руководство`,
+      `${cleanQ} Wiki — Все способы и системные требования`,
+      `Обзор и системные требования ${cleanQ}`,
+      `Решение проблем и установка ${cleanQ} на Windows`,
     ]
 
     const domain = domains[idx % domains.length]
@@ -403,17 +421,9 @@ export default function App() {
       title: titles[idx % titles.length],
       url: `https://${domain}/search?q=${encodeURIComponent(cleanQ)}`,
       domain: domain,
-      snippet: `Подробная информация, свежие обновления и практические инструкции по запросу "${cleanQ}".`,
-      imageUrl: getTopicFallbackImage(cleanQ, idx),
+      snippet: `Подробная официальная инструкция, пошаговое руководство по скачиванию и установке ${cleanQ}.`,
+      imageUrl: topicImages[idx % topicImages.length],
     }
-  }
-
-  const generateFull10DynamicResults = (q: string): SearchResultItem[] => {
-    const list: SearchResultItem[] = []
-    for (let i = 0; i < 10; i++) {
-      list.push(generateDynamicFallbackItem(q, i))
-    }
-    return list
   }
 
   // Execute AI Search with UP TO 5 RETRIES & 5s COUNTDOWN
@@ -441,6 +451,9 @@ export default function App() {
     const newUrl = `${window.location.pathname}?q=${encodeURIComponent(q)}`
     window.history.pushState(null, '', newUrl)
 
+    // Pre-fetch topic matching images for query `q`
+    const topicImages = await fetchRealTopicImages(q)
+
     const langName = lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'
     const systemPrompt = `You are Krakenus AI Search Engine Core.
 User query: "${q}".
@@ -456,8 +469,7 @@ JSON Format:
     "title": "Заголовок страницы",
     "url": "https://example.com/page",
     "domain": "example.com",
-    "snippet": "Описание...",
-    "imageUrl": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop&q=80"
+    "snippet": "Описание..."
   }
 ]`
 
@@ -514,12 +526,12 @@ JSON Format:
                   url: item.url || `https://${item.domain || 'google.com'}`,
                   domain: item.domain || 'web.search',
                   snippet: item.snippet || 'Подробная информация по вашему запросу.',
-                  imageUrl: item.imageUrl || getTopicFallbackImage(q, idx),
+                  imageUrl: topicImages[idx % topicImages.length],
                 }))
 
                 // FORCE EXACTLY 10 ITEMS
                 while (formattedItems.length < 10) {
-                  formattedItems.push(generateDynamicFallbackItem(q, formattedItems.length))
+                  formattedItems.push(generateDynamicFallbackItem(q, formattedItems.length, topicImages))
                 }
 
                 setResults(formattedItems.slice(0, 10))
@@ -527,13 +539,13 @@ JSON Format:
                 break
               }
             } catch (jsonErr) {
-              setResults(generateFull10DynamicResults(q))
+              setResults(Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i, topicImages)))
               success = true
               break
             }
           } else {
             setAiSummary(fullContent)
-            setResults(generateFull10DynamicResults(q))
+            setResults(Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i, topicImages)))
             success = true
             break
           }
@@ -542,7 +554,6 @@ JSON Format:
         console.error(`Attempt ${attempt} error:`, e)
       }
 
-      // If failed & attempts remaining, do 5-second countdown wait
       if (!success && attempt < maxAttempts) {
         for (let sec = 5; sec > 0; sec--) {
           setAttemptStatus(`Не удалось. Повторная попытка (${attempt}/${maxAttempts}) через ${sec} сек...`)
@@ -554,7 +565,7 @@ JSON Format:
     if (!success) {
       setAttemptStatus('')
       setAiSummary(`Запрос обработан по базе данных Octopus Search.`)
-      setResults(generateFull10DynamicResults(q))
+      setResults(Array.from({ length: 10 }, (_, i) => generateDynamicFallbackItem(q, i, topicImages)))
     }
 
     setIsSearching(false)
@@ -963,7 +974,7 @@ JSON Format:
                   </div>
                 )}
 
-                {/* EXACTLY 10 ORGANIC SITES LIST WITH RELIABLE FALLBACK IMAGES */}
+                {/* EXACTLY 10 ORGANIC SITES LIST WITH REAL QUERY MATCHED IMAGES */}
                 <div className="google-organic-list">
                   {results.length > 0 ? (
                     results.map((item, index) => (
@@ -989,18 +1000,21 @@ JSON Format:
                             <p className="google-result-snippet">{item.snippet}</p>
                           </div>
 
-                          <div className="google-result-thumb-box">
-                            <img
-                              src={item.imageUrl || getTopicFallbackImage(activeQuery, index)}
-                              alt={item.title}
-                              loading="lazy"
-                              onError={(e) => {
-                                const target = e.currentTarget
-                                target.onerror = null
-                                target.src = getTopicFallbackImage(activeQuery, index)
-                              }}
-                            />
-                          </div>
+                          {item.imageUrl && (
+                            <div className="google-result-thumb-box">
+                              <img
+                                src={item.imageUrl}
+                                alt={item.title}
+                                loading="lazy"
+                                onError={(e) => {
+                                  const target = e.currentTarget
+                                  target.onerror = null
+                                  const cleanKeyword = activeQuery.toLowerCase().replace(/скачать|на пк|бесплатно|как/g, '').trim() || activeQuery
+                                  target.src = `https://loremflickr.com/600/400/${encodeURIComponent(cleanKeyword)}?lock=${(index + 1) * 7}`
+                                }}
+                              />
+                            </div>
+                          )}
                         </div>
                       </article>
                     ))
@@ -1026,13 +1040,14 @@ JSON Format:
                   >
                     <div className="image-card-preview">
                       <img
-                        src={item.imageUrl || getTopicFallbackImage(activeQuery, index)}
+                        src={item.imageUrl || `https://loremflickr.com/600/400/${encodeURIComponent(activeQuery)}?lock=${(index + 1) * 7}`}
                         alt={item.title}
                         loading="lazy"
                         onError={(e) => {
                           const target = e.currentTarget
                           target.onerror = null
-                          target.src = getTopicFallbackImage(activeQuery, index)
+                          const cleanKeyword = activeQuery.toLowerCase().replace(/скачать|на пк|бесплатно|как/g, '').trim() || activeQuery
+                          target.src = `https://loremflickr.com/600/400/${encodeURIComponent(cleanKeyword)}?lock=${(index + 1) * 7}`
                         }}
                       />
                     </div>
