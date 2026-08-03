@@ -5,10 +5,14 @@ node_modules
 dist
 .netlify
 .tanstack
+.output
+.nitro
+.vinxi
 
 # Environment & local files
 .env
 .env.local
+.env.*
 *.log
 
 # OS files

@@ -10,7 +10,7 @@
 [![Vite 7](https://img.shields.io/badge/Vite-7.3-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4.0-38BDF8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
-[![Netlify](https://img.shields.io/badge/Deploy-Netlify-00C7B7?style=for-the-badge&logo=netlify)](https://www.netlify.com)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com)
 
 ---
 
@@ -23,7 +23,7 @@
 ## 🇷🇺 Русский
 
 ### 📌 О проекте
-**Octopus** — это фронтенд-вебсайт компании и хаб проектов. Он представляет собой единый цифровой бренд, который объединяет самостоятельные веб-продукты и сервисы. Каждое направление (Search, Studio, Cloud) может развиваться в отдельный сайт на поддомене или отдельный сервис Netlify.
+**Octopus** — это фронтенд-вебсайт компании и хаб проектов. Он представляет собой единый цифровой бренд, который объединяет самостоятельные веб-продукты и сервисы. Каждое направление (Search, Studio, Cloud) может развиваться в отдельный сайт на поддомене или отдельный проект Vercel.
 
 ### ✨ Главные фичи
 - 🚀 **Помощник на Джетпаке**: Интерактивный процедурный маскот осьминога с реактивным ранцем, анимацией вылета, парения и возврата в гнездо.

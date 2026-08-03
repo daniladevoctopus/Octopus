@@ -10,7 +10,7 @@ Octopus is a Russian-language company and project-hub website. It presents a sin
 - TanStack Router file-based routing
 - TypeScript in strict mode
 - Tailwind CSS 4 with a custom global design system
-- Vite 7 and the Netlify TanStack Start adapter
+- Vite 7 and Nitro (Vercel deployment)
 - Lucide React for interface icons
 
 ## Architecture
@@ -24,7 +24,7 @@ src/
     index.tsx           Main marketing page and page content
   router.tsx            TanStack Router setup
   styles.css            Global tokens, layout, responsive rules, animations
-netlify.toml             Netlify build and local development settings
+vercel.json             Vercel deployment settings
 ```
 
 ## Coding Conventions
@@ -44,7 +44,7 @@ The visual system uses a dark green core, warm off-white surfaces, coral accents
 
 ## Adding Services
 
-The service preview data currently lives in `src/routes/index.tsx`. A service can later become a separate Netlify site. With the default Netlify domain, separate sites use separate `*.netlify.app` names. Nested service addresses such as `search.octopus.example` require a custom domain and DNS configuration.
+The service preview data currently lives in `src/routes/index.tsx`. A service can later become a separate Vercel project or subdomain. With Vercel, subdomains can be mapped directly to separate projects or routed using Vercel domains. Nested service addresses such as `search.octopus.example` or subdomains can be attached directly in the Vercel Dashboard.
 
 ## Commands
 
