@@ -10,7 +10,7 @@
 [![Vite 7](https://img.shields.io/badge/Vite-7.3-646CFF?style=for-the-badge&logo=vite)](https://vitejs.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4.0-38BDF8?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com)
-[![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel)](https://vercel.com)
+[![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel)](https://octopus-labs.vercel.app/)
 
 ---
 
@@ -23,14 +23,20 @@
 ## 🇷🇺 Русский
 
 ### 📌 О проекте
-**Octopus** — это фронтенд-вебсайт компании и хаб проектов. Он представляет собой единый цифровой бренд, который объединяет самостоятельные веб-продукты и сервисы. Каждое направление (Search, Studio, Cloud) может развиваться в отдельный сайт на поддомене или отдельный проект Vercel.
+**Octopus Labs** — это фронтенд-вебсайт компании и центральный хаб цифровой экосистемы. Сайт объединяет самостоятельные веб-продукты под одним именем и архитектурой поддоменов Vercel (`octopus-labs.vercel.app`).Все планируемые сервисы находятся в этапе **закрытого бета-тестирования**.
+
+### 🤖 Экосистема сервисов (Бета-тест)
+- 🧠 **Octopus Quantum AI** (`ai.octopus-labs.vercel.app`): Собственная языковая нейросеть для автоматизации задач и интеллектуальной аналитики.
+- 🎨 **Octopus Studio** (`studio.octopus-labs.vercel.app`): Небольшие веб-продукты, экспериментальные интерфейсы и утилиты для создателей.
+- ☁️ **Octopus Cloud** (`cloud.octopus-labs.vercel.app`): Единое пространство для хранения данных и синхронизации между сервисами.
 
 ### ✨ Главные фичи
-- 🚀 **Помощник на Джетпаке**: Интерактивный процедурный маскот осьминога с реактивным ранцем, анимацией вылета, парения и возврата в гнездо.
-- 📜 **Интерактивный Гид по сайту**: 6-этапная экскурсия, со скролл-блокировкой и автоматическим переключением реплик при ручной прокрутке.
-- 🌐 **Мультиязычность**: Встроенное меню выбора языка (Русский, English, Українська) с сохранением выбора в `localStorage`.
-- 🖼️ **Экспорт логотипа**: Функция скачивания фирменного чистейшего PNG-логотипа без фона прямо из футера.
-- 🎨 **Уникальная дизайн-система**: Тёмно-зелёное ядро (`#142b2b`), тёплые поверхности (`#f3f0e7`), коралловые акценты (`#ef745f`) и лаймовые подсвечивания (`#c5da68`).
+- 🤖 **Krakenus AI Assistant**: Интерактивный нейросетевой ассистент с сохранениях контекста в `localStorage` и поддержкой фолбэка закрытого бета-теста.
+- 🚀 **Маскот на Джетпаке**: Процедурный маскот осьминога с реактивным ранцем, анимацией вылета, маневрирования и возврата в гнездо.
+- 📜 **Интерактивный Гид**: 6-этапная пошаговая экскурсия со скролл-блокировкой и автопереключением шагов.
+- 💎 **Liquid Glass & Industrial UI**: Фиксированный хэдер с эффектом жидкого стекла (`blur(20px)`), строгие 10px-радиусные стекло-кнопки и полоса спец-анонса.
+- 🌐 **Мультиязычность**: Селектор языков (RU, EN, UK) с автоопределением по IP Geolocation и строгим запоминанием выбора.
+- 🖼️ **Прозрачный логотип**: Скачивание чистого PNG-логотипа без фона прямо из футера.
 
 ### 🛠️ Команды разработчика
 ```bash
@@ -49,14 +55,20 @@ pnpm build
 ## 🇬🇧 English
 
 ### 📌 About the Project
-**Octopus** is a company landing site and product ecosystem hub. It establishes a unified brand umbrella uniting independent digital products and micro-services. Each service (Search, Studio, Cloud) can grow into a standalone application or subdomain.
+**Octopus Labs** is a company landing site and product ecosystem hub. It establishes a unified brand umbrella uniting independent digital products on Vercel subdomains (`octopus-labs.vercel.app`). All ecosystem products are currently in **Closed Beta Testing**.
+
+### 🤖 Ecosystem Services (Closed Beta)
+- 🧠 **Octopus Quantum AI** (`ai.octopus-labs.vercel.app`): In-house proprietary neural network & AI language engine for workflows and intelligent automation.
+- 🎨 **Octopus Studio** (`studio.octopus-labs.vercel.app`): Compact web apps, experimental interfaces, and creator utilities.
+- ☁️ **Octopus Cloud** (`cloud.octopus-labs.vercel.app`): Unified cloud storage connecting data across all ecosystem products.
 
 ### ✨ Key Features
-- 🚀 **Jetpack Assistant Mascot**: Procedural React & CSS mascot featuring high-tech thruster tanks, animated fire plumes, curve flight maneuvers, and return landing.
-- 📜 **Interactive Site Tour**: 6-step guided walkthrough with section scroll locks and auto-switching speech bubble logic.
-- 🌐 **Multi-language Support**: Instant translation switcher (English, Russian, Ukrainian) with persistent `localStorage` preference.
-- 🖼️ **Transparent Logo Export**: Instant vector-to-PNG download button in the footer for transparent brand logo exports.
-- 🎨 **Tailored Design System**: Dark teal core (`#142b2b`), warm off-white canvas (`#f3f0e7`), vibrant coral (`#ef745f`), and lime highlights (`#c5da68`).
+- 🤖 **Krakenus AI Assistant**: Built-in neural chat modal with persistent chat context and intelligent fallback for missing API keys / 401 statuses.
+- 🚀 **Jetpack Mascot**: Procedural React mascot with dual thrusters, flight physics, and nest landing routines.
+- 📜 **Interactive Site Tour**: 6-step guided walkthrough with section scroll locks and auto-advancing cues.
+- 💎 **Liquid Glass Header & UI**: Fixed header with liquid glass effect (`blur(20px)`), industrial 10px-radius glass buttons, and clean announcement notice bar.
+- 🌐 **Multi-language Support**: Instant language switcher (English, Russian, Ukrainian) with IP Geolocation auto-detection.
+- 🖼️ **Logo PNG Export**: Instant vector-to-PNG download button in the footer for transparent brand logo exports.
 
 ### 🛠️ Development Commands
 ```bash
@@ -75,14 +87,20 @@ pnpm build
 ## 🇺🇦 Українська
 
 ### 📌 Про проєкт
-**Octopus** — це вебсайт компанії та хаб продуктів. Він представляє єдиний цифровий бренд, що об'єднує самостійні веб-сервіси (Search, Studio, Cloud). Кожен продукт розвивається окремо, але залишається частиною єдиної екосистеми.
+**Octopus Labs** — це вебсайт компанії та хаб екосистеми продуктів. Він представляє єдиний цифровий бренд, що об'єднує самостійні веб-сервіси на піддоменах Vercel (`octopus-labs.vercel.app`). Наразі усі сервіси перебувають у стадії **закритого бета-тестування**.
+
+### 🤖 Сервіси екосистеми (Закритий бета-тест)
+- 🧠 **Octopus Quantum AI** (`ai.octopus-labs.vercel.app`): Власна мовна нейромережа для автоматизації завдань та інтелектуальної аналітики.
+- 🎨 **Octopus Studio** (`studio.octopus-labs.vercel.app`): Невеликі веб-продукти, експериментальні інтерфейси та інструменти для творців.
+- ☁️ **Octopus Cloud** (`cloud.octopus-labs.vercel.app`): Єдиний простір для даних та синхронізації між сервісами.
 
 ### ✨ Основні особливості
-- 🚀 **Помічник на Джетпаку**: Інтерактивний процедурний маскот восьминога з реактивним ранцем, анімаціями зльоту, маневрів та повернення.
-- 📜 **Інтерактивний Ґід по сайту**: Покрокова екскурсія з розблокуванням секцій та автоматичним перемиканням під час гортання.
-- 🌐 **Мультимовність**: Зручне меню перемикання мов (Українська, English, Русский) із збереженням у `localStorage`.
-- 🖼️ **Експорт логотипа**: Завантаження фірмового PNG-логотипа без фону прямо з футера.
-- 🎨 **Унікальна дизайн-система**: Глибокий темний колір (`#142b2b`), теплі поверхні (`#f3f0e7`), коралові акценти (`#ef745f`) та лаймові підсвічування (`#c5da68`).
+- 🤖 **Krakenus AI Assistant**: Нейромережевий асистент із збереженням історії в `localStorage` та фолбеком закритого бета-тесту.
+- 🚀 **Помічник на Джетпаку**: Процедурний маскот восьминога з реактивними двигунами, польотом та поверненням у гніздо.
+- 📜 **Інтерактивний Ґід**: 6-етапна покрокова екскурсія з розблокуванням секцій та автоматичним гортанням.
+- 💎 **Liquid Glass & Industrial UI**: Шапка з ефектом рідкого скла (`blur(20px)`), строгі 10px-радиусні кнопки та смуга спец-анонсу.
+- 🌐 **Мультимовність**: Перемикач мов (Українська, English, Русский) з IP-геолокацією та збереженням у `localStorage`.
+- 🖼️ **Експорт логотипа**: Завантаження прозорого PNG-логотипа без фону з футера.
 
 ### 🛠️ Команди розробки
 ```bash
@@ -99,5 +117,5 @@ pnpm build
 ---
 
 <div align="center">
-  <sub>Designed & Developed for Octopus Labs. Powered by TanStack Start.</sub>
+  <sub>Designed & Developed for Octopus Labs. Powered by TanStack Start & Vercel.</sub>
 </div>
