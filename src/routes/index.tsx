@@ -55,7 +55,7 @@ const LANGUAGE_CONFIG: Record<Language, { label: string; flag: string }> = {
 }
 
 const SERVICE_META: ServiceMetaItem[] = [
-  { icon: Search, accent: 'coral' },
+  { icon: Bot, accent: 'coral' },
   { icon: Braces, accent: 'lime' },
   { icon: Cloud, accent: 'blue' },
 ]
@@ -84,6 +84,12 @@ const TRANSLATIONS = {
       mascotReturning: 'Возврат в гнездо',
       scrollCue: 'Листать',
     },
+    announcement: {
+      tag: 'Спец-анонс • Octopus Quantum AI',
+      title: 'Корректировка графика: готовим собственную нейросеть Octopus Quantum AI!',
+      text: 'Команда Octopus Labs сфокусирована на подготовке к релизу нашей собственной нейросети Octopus Quantum AI. Все сервисы экосистемы находятся в этапе закрытого бета-тестирования.',
+      badge: 'Quantum AI',
+    },
     manifesto: {
       kicker: '/ Зачем это существует',
       p1: 'Не очередная «корпорация».',
@@ -96,19 +102,19 @@ const TRANSLATIONS = {
       lead: 'Все планируемые сервисы находятся в этапе закрытого бета-тестирования и готовятся к последовательному релизу.',
       list: [
         {
-          id: 'search',
+          id: 'ai',
           code: '01',
-          name: 'Octopus Search',
-          domain: 'search.octopus.dev',
-          description: 'Быстрый поиск по нужным источникам без лишнего шума и перегруженной выдачи.',
+          name: 'Octopus Quantum AI',
+          domain: 'ai.octopus-labs.vercel.app',
+          description: 'Собственная языковая нейросеть Octopus Quantum AI для автоматизации задач и интеллектуальной аналитики.',
           status: 'Закрытый бета-тест',
-          badge: 'Умный фильтр',
+          badge: 'Флагман ИИ',
         },
         {
           id: 'studio',
           code: '02',
           name: 'Octopus Studio',
-          domain: 'studio.octopus.dev',
+          domain: 'studio.octopus-labs.vercel.app',
           description: 'Небольшие веб‑продукты, экспериментальные интерфейсы и инструменты для создателей.',
           status: 'Закрытый бета-тест',
           badge: 'Креатив',
@@ -117,7 +123,7 @@ const TRANSLATIONS = {
           id: 'cloud',
           code: '03',
           name: 'Octopus Cloud',
-          domain: 'cloud.octopus.dev',
+          domain: 'cloud.octopus-labs.vercel.app',
           description: 'Единое пространство для данных и связей между будущими сервисами экосистемы.',
           status: 'Закрытый бета-тест',
           badge: 'Синхронизация',
@@ -143,7 +149,7 @@ const TRANSLATIONS = {
       note: 'На этапе закрытого бета-тестирования сервисы разворачиваются в автономных средах перед выходом в публичный релиз.',
       rootTag: 'Главный сайт',
       rootSpan: 'MAIN',
-      s1Tag: 'Сервис 01',
+      s1Tag: 'Сервис 01 (ИИ)',
       s2Tag: 'Сервис 02',
       s3Tag: 'Сервис 03',
     },
@@ -173,13 +179,13 @@ const TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ИИ-ассистент экосистемы Octopus (Laguna XS)',
-      welcome: 'Приветствую. Я **Krakenus AI** — нейросетевой ассистент Octopus Labs. Обратите внимание: все наши сервисы сейчас находятся в этапе **закрытого бета-тестирования** и еще не вышли в публичный релиз. Задавайте любые вопросы!',
+      welcome: 'Приветствую. Я **Krakenus AI** — нейросетевой ассистент Octopus Labs. Все наши сервисы сейчас находятся в этапе **закрытого бета-тестирования**. Мы также готовим релиз нашей **собственной ИИ нейросети**! Задавайте любые вопросы.',
       placeholder: 'Задайте вопрос Krakenus AI...',
       quickTitle: 'Частые вопросы:',
       quickPrompts: [
         'Когда релиз сервисов?',
         'Как проходит закрытый бета-тест?',
-        'Что такое Octopus Search?',
+        'Что такое Octopus Quantum AI?',
         'Как устроена доменная структура?',
       ],
       clearTooltip: 'Очистить историю чата',
@@ -200,7 +206,7 @@ const TRANSLATIONS = {
       {
         targetId: 'services',
         title: '2. Сервисы (Бета)',
-        text: 'Экосистема проходит закрытое бета-тестирование: Search для поиска, Studio для инструментов и Cloud для синхронизации.',
+        text: 'Экосистема проходит закрытое бета-тестирование: Quantum AI для интеллекта, Studio для инструментов и Cloud для синхронизации.',
         buttonText: 'К принципам',
       },
       {
@@ -246,6 +252,12 @@ const TRANSLATIONS = {
       mascotReturning: 'Returning to Nest',
       scrollCue: 'Scroll',
     },
+    announcement: {
+      tag: 'Special Announcement • Octopus Quantum AI',
+      title: 'Schedule Update: Preparing In-House Octopus Quantum AI!',
+      text: 'The Octopus Labs team is focusing on the launch of our proprietary neural network, Octopus Quantum AI. All ecosystem services are in closed beta testing.',
+      badge: 'Quantum AI',
+    },
     manifesto: {
       kicker: '/ Why It Exists',
       p1: 'Not another mega-corporation.',
@@ -258,19 +270,19 @@ const TRANSLATIONS = {
       lead: 'All planned services are currently undergoing closed beta testing prior to public release.',
       list: [
         {
-          id: 'search',
+          id: 'ai',
           code: '01',
-          name: 'Octopus Search',
-          domain: 'search.octopus.dev',
-          description: 'Fast, noise-free search engine focused on quality sources without bloated ads.',
+          name: 'Octopus Quantum AI',
+          domain: 'ai.octopus-labs.vercel.app',
+          description: 'Proprietary language neural network and AI system for intelligent automation and data analytics.',
           status: 'Closed Beta Test',
-          badge: 'Smart Filter',
+          badge: 'AI Flagship',
         },
         {
           id: 'studio',
           code: '02',
           name: 'Octopus Studio',
-          domain: 'studio.octopus.dev',
+          domain: 'studio.octopus-labs.vercel.app',
           description: 'Compact web apps, experimental interfaces, and creative creator utilities.',
           status: 'Closed Beta Test',
           badge: 'Creative',
@@ -279,7 +291,7 @@ const TRANSLATIONS = {
           id: 'cloud',
           code: '03',
           name: 'Octopus Cloud',
-          domain: 'cloud.octopus.dev',
+          domain: 'cloud.octopus-labs.vercel.app',
           description: 'Unified cloud storage connecting data across all ecosystem products.',
           status: 'Closed Beta Test',
           badge: 'Sync Engine',
@@ -305,7 +317,7 @@ const TRANSLATIONS = {
       note: 'During closed beta testing, products deploy in isolated environments before public launch.',
       rootTag: 'Main Portal',
       rootSpan: 'MAIN',
-      s1Tag: 'Service 01',
+      s1Tag: 'Service 01 (AI)',
       s2Tag: 'Service 02',
       s3Tag: 'Service 03',
     },
@@ -334,14 +346,14 @@ const TRANSLATIONS = {
     },
     krakenusAi: {
       title: 'Krakenus AI',
-      subtitle: 'Octopus Labs Neural Assistant (Laguna XS)',
-      welcome: 'Greetings. I am **Krakenus AI**, the neural assistant for Octopus Labs. Please note: all ecosystem products are currently in **closed beta testing** and not yet publicly released. Feel free to ask any questions!',
+      subtitle: 'Octopus Labs Neural Assistant (Quantum Engine)',
+      welcome: 'Greetings. I am **Krakenus AI**, the neural assistant for Octopus Labs. All services are currently in **closed beta testing**. We are also preparing the release of our **own proprietary Octopus Quantum AI**! Feel free to ask any questions.',
       placeholder: 'Ask Krakenus AI a question...',
       quickTitle: 'Common questions:',
       quickPrompts: [
         'When is the public release?',
         'How does closed beta test work?',
-        'What is Octopus Search?',
+        'What is Octopus Quantum AI?',
         'How is domain architecture designed?',
       ],
       clearTooltip: 'Clear chat history',
@@ -362,7 +374,7 @@ const TRANSLATIONS = {
       {
         targetId: 'services',
         title: '2. Services (Beta)',
-        text: 'The ecosystem is in closed beta testing: Search for discovery, Studio for tools, and Cloud for syncing.',
+        text: 'The ecosystem is in closed beta testing: Quantum AI for intelligence, Studio for tools, and Cloud for syncing.',
         buttonText: 'To Principles',
       },
       {
@@ -408,6 +420,180 @@ const TRANSLATIONS = {
       mascotReturning: 'Повернення до гнізда',
       scrollCue: 'Гортати',
     },
+    announcement: {
+      tag: 'Спец-анонс • Octopus Quantum AI',
+      title: 'Оновлення графіка: готуємо власну нейромережу Octopus Quantum AI!',
+      text: 'Команда Octopus Labs сфокусована на релізі нашої власної нейромережі Octopus Quantum AI. Усі заплановані сервіси перебувають у стадії закритого бета-тестування.',
+      badge: 'Quantum AI',
+    },
+    manifesto: {
+      kicker: '/ Навіщо це існує',
+      p1: 'Не чергова «корпорація».',
+      span: ' Невелика майстерня корисних цифрових речей.',
+      side: 'Octopus об\'єднує самостійні продукти під одним ім\'ям, спільними принципами та впізнаваним характером.',
+    },
+    servicesSection: {
+      kicker: '/ Екосистема',
+      h2: 'Майбутні сервіси',
+      lead: 'Усі заплановані сервіси перебувають у стадії закритого бета-тестування та готуються до послідовного релізу.',
+      list: [
+        {
+          id: 'ai',
+          code: '01',
+          name: 'Octopus Quantum AI',
+          domain: 'ai.octopus-labs.vercel.app',
+          description: 'Власна мовна нейромережа Octopus Quantum AI для автоматизації завдань та інтелектуальної аналітики.',
+          status: 'Закритий бета-тест',
+          badge: 'Флагман ШІ',
+        },
+        {
+          id: 'studio',
+          code: '02',
+          name: 'Octopus Studio',
+          domain: 'studio.octopus-labs.vercel.app',
+          description: 'Невеликі веб-продукти, експериментальні інтерфейси та інструменти для творців.',
+          status: 'Закритий бета-тест',
+          badge: 'Креатив',
+        },
+        {
+          id: 'cloud',
+          code: '03',
+          name: 'Octopus Cloud',
+          domain: 'cloud.octopus-labs.vercel.app',
+          description: 'Єдиний простір для даних та зв\'язків між майбутніми сервісами екосистеми.',
+          status: 'Закритий бета-тест',
+          badge: 'Синхронізація',
+        },
+      ],
+    },
+    principlesSection: {
+      kicker: '/ Principles',
+      h2Line1: 'Complexity',
+      h2Em: 'stays',
+      h2Line2: ' inside.',
+      seal: 'Built with Care',
+      items: [
+        ['Single Account', 'Services work as one connected ecosystem rather than disconnected pages.'],
+        ['Honest Interface', 'Clear features, calm design, and zero visual clutter.'],
+        ['Small Releases', 'Each product undergoes closed beta testing and evolves continuously.'],
+      ],
+    },
+    domainsSection: {
+      kicker: '/ Domain Architecture',
+      h2: 'One Brand. Multiple Doors.',
+      p: 'The main landing site operates as an ecosystem hub. Services receive independent subdomains upon completing beta testing.',
+      note: 'During closed beta testing, products deploy in isolated environments before public launch.',
+      rootTag: 'Main Portal',
+      rootSpan: 'MAIN',
+      s1Tag: 'Service 01 (AI)',
+      s2Tag: 'Service 02',
+      s3Tag: 'Service 03',
+    },
+    closingSection: {
+      kicker: '/ The Story Begins',
+      h2Line1: 'Closed Beta in progress.',
+      h2Em: ' Public release soon.',
+      p: 'New projects will launch as soon as beta testing completes — no empty promises, just working code.',
+      btnTop: 'Return to Top',
+    },
+    footer: {
+      exportBtn: 'Transparent PNG',
+      motto: 'Independent digital products from one creative home.',
+      projectsLink: 'Projects',
+    },
+    cookie: {
+      title: 'Cookie Files',
+      text: 'We use cookies to save preferences and ensure proper website functionality.',
+      btnYes: 'Accept',
+      btnThink: 'Remind Later',
+    },
+    geoModal: {
+      title: 'Welcome!',
+      text: 'According to our location data, you are visiting from Ukraine. Language has been set to Ukrainian, but you may choose any option below:',
+      acceptBtn: 'Got It',
+    },
+    krakenusAi: {
+      title: 'Krakenus AI',
+      subtitle: 'Octopus Labs Neural Assistant (Quantum Engine)',
+      welcome: 'Greetings. I am **Krakenus AI**, the neural assistant for Octopus Labs. All services are currently in **closed beta testing**. We are also preparing the release of our **own proprietary Octopus Quantum AI**! Feel free to ask any questions.',
+      placeholder: 'Ask Krakenus AI a question...',
+      quickTitle: 'Common questions:',
+      quickPrompts: [
+        'When is the public release?',
+        'How does closed beta test work?',
+        'What is Octopus Quantum AI?',
+        'How is domain architecture designed?',
+      ],
+      clearTooltip: 'Clear chat history',
+    },
+    tourSteps: [
+      {
+        targetId: 'top',
+        title: 'Interactive Guide',
+        text: 'You can follow the section tour or browse the site freely.',
+        buttonText: 'Next',
+      },
+      {
+        targetId: 'manifesto',
+        title: '1. Manifesto',
+        text: 'Octopus is a digital workshop for clean, functional web utilities.',
+        buttonText: 'To Services',
+      },
+      {
+        targetId: 'services',
+        title: '2. Services (Beta)',
+        text: 'The ecosystem is in closed beta testing: Quantum AI for intelligence, Studio for tools, and Cloud for syncing.',
+        buttonText: 'To Principles',
+      },
+      {
+        targetId: 'principles',
+        title: '3. Our Approach',
+        text: 'Single sign-on, beta testing, and transparent user interfaces.',
+        buttonText: 'To Domains',
+      },
+      {
+        targetId: 'domains',
+        title: '4. Architecture',
+        text: 'The main site serves as a hub, with beta products operating on subdomains.',
+        buttonText: 'To Finale',
+      },
+      {
+        targetId: 'closing',
+        title: '5. Finale',
+        text: 'Tour completed. Full website is now unlocked.',
+        buttonText: 'Back to Nest',
+      },
+    ],
+  },
+  uk: {
+    nav: {
+      services: 'Сервіси',
+      principles: 'Підхід',
+      domains: 'Домени',
+      status: 'Закритий бета-тест',
+    },
+    hero: {
+      eyebrow: 'НЕЗАЛЕЖНА ЦИФРОВА ЛАБОРАТОРІЯ',
+      h1Line1: 'Багато ідей.',
+      h1Span: 'Єдина розумна',
+      h1Line2: ' система.',
+      lead: 'Octopus — дім для майбутніх проєктів та сервісів. Усі продукти наразі перебувають у стадії закритого бета-тестування.',
+      btnLaunch: 'Запустити ґіда',
+      btnExplore: 'Дивитися екосистему',
+      btnSkip: 'Пропустити ґіда',
+      btnAi: 'Krakenus AI',
+      mascotBadge: 'Помічник Octopus',
+      mascotHint: 'Натисніть для запуску',
+      mascotFlying: 'У польоті',
+      mascotReturning: 'Повернення до гнізда',
+      scrollCue: 'Гортати',
+    },
+    announcement: {
+      tag: 'Спец-анонс • Реліз власного ШІ',
+      title: 'Невеличка затримка: готуємо власну нейромережу Octopus AI!',
+      text: 'Ми тимчасово призупинили розробку Octopus Search, щоб сфокусуватися на підготовці до релізу нашої власної нейромережі. Публічний запуск відбудеться одразу після інтеграції ШІ-моделі.',
+      badge: 'Octopus Neural AI',
+    },
     manifesto: {
       kicker: '/ Навіщо це існує',
       p1: 'Не чергова «корпорація».',
@@ -424,9 +610,9 @@ const TRANSLATIONS = {
           code: '01',
           name: 'Octopus Search',
           domain: 'search.octopus.dev',
-          description: 'Швидкий пошук по потрібних джерелах без зайвого шуму та перевантаженої видачі.',
-          status: 'Закритий бета-тест',
-          badge: 'Розумний фільтр',
+          description: 'Розробку поточного пошуку призупинено — готуємо інтеграцію власної нейромережі.',
+          status: 'Пауза → ШІ Ядро',
+          badge: 'Власний ШІ',
         },
         {
           id: 'studio',
@@ -497,14 +683,14 @@ const TRANSLATIONS = {
     krakenusAi: {
       title: 'Krakenus AI',
       subtitle: 'ШІ-асистент екосистеми Octopus Labs (Laguna XS)',
-      welcome: 'Вітаю. Я **Krakenus AI** — нейромережевий асистент Octopus Labs. Зверніть увагу: усі наші сервіси наразі перебувають у стадії **закритого бета-тестування** і ще не вийшли у публічний реліз. Задавайте будь-які питання!',
+      welcome: 'Вітаю. Я **Krakenus AI** — нейромережевий асистент Octopus Labs. Усі сервіси наразі перебувають у стадії **закритого бета-тестування**. Ми також готуємо реліз нашої **власної ШІ-моделі**! Задавайте будь-які питання.',
       placeholder: 'Задайте питання Krakenus AI...',
       quickTitle: 'Часті питання:',
       quickPrompts: [
         'Коли публічний реліз?',
         'Як проходить закритий бета-тест?',
-        'Що таке Octopus Search?',
-        'Як влаштована доменна структура?',
+        'Що з Octopus Search?',
+        'Коли реліз власної ШІ-моделі?',
       ],
       clearTooltip: 'Очистити історію чату',
     },
@@ -524,7 +710,7 @@ const TRANSLATIONS = {
       {
         targetId: 'services',
         title: '2. Сервіси (Бета)',
-        text: 'Екосистема у закритому бета-тестуванні: Search для пошуку, Studio для інструментів і Cloud для синхронізації.',
+        text: 'Екосистема у закритому бета-тестуванні: Search на паузі для інтеграції ШІ, Studio для інструментів і Cloud для синхронізації.',
         buttonText: 'До принципів',
       },
       {
@@ -642,6 +828,8 @@ function LanguageSelectorMenu({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const activeConfig = LANGUAGE_CONFIG[currentLang] || LANGUAGE_CONFIG.ru
+
   return (
     <div className="lang-menu-ref" ref={menuRef}>
       <button
@@ -650,7 +838,7 @@ function LanguageSelectorMenu({
         onClick={() => setOpen((o) => !o)}
         aria-label="Выбор языка / Language menu"
       >
-        <Globe size={14} />
+        <span className="lang-flag">{activeConfig.flag}</span>
         <span className="lang-code">{currentLang.toUpperCase()}</span>
         <ChevronDown size={11} className={`lang-chevron ${open ? 'is-open' : ''}`} />
       </button>
@@ -723,7 +911,18 @@ function downloadLogoTransparent() {
 }
 
 function HomePage() {
-  const [lang, setLang] = useState<Language>('ru')
+  const [lang, setLang] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('octopus_lang') as Language
+      if (saved && (saved === 'ru' || saved === 'en' || saved === 'uk')) {
+        return saved
+      }
+      const navLang = navigator.language ? navigator.language.toLowerCase() : ''
+      if (navLang.startsWith('uk')) return 'uk'
+      if (navLang.startsWith('en')) return 'en'
+    }
+    return 'ru'
+  })
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   
@@ -792,12 +991,12 @@ function HomePage() {
 
   // IP Geolocation Check & Language Persistence Fix
   useEffect(() => {
+    if (typeof window === 'undefined') return
     const savedLang = localStorage.getItem('octopus_lang') as Language
     const geoPrompted = localStorage.getItem('octopus_geo_prompted')
 
     if (savedLang && (savedLang === 'ru' || savedLang === 'en' || savedLang === 'uk')) {
-      setLang(savedLang)
-      return // STRICT PERSISTENCE FIX: Do NOT run IP geolocation if user previously saved language preference!
+      return // STRICT PERSISTENCE FIX: User preference saved
     }
 
     const controller = new AbortController()
@@ -809,23 +1008,21 @@ function HomePage() {
         clearTimeout(timeoutId)
         if (data && data.country_code) {
           const country = String(data.country_code).toUpperCase()
+          let autoLang: Language = 'ru'
           if (country === 'UA') {
-            setLang('uk')
-            localStorage.setItem('octopus_lang', 'uk')
+            autoLang = 'uk'
             if (!geoPrompted) {
               setGeoModalOpen(true)
             }
+          } else if (['US', 'GB', 'CA', 'AU', 'DE', 'FR'].includes(country)) {
+            autoLang = 'en'
           }
+          setLang(autoLang)
+          localStorage.setItem('octopus_lang', autoLang)
         }
       })
       .catch(() => {
-        const navLang = navigator.language ? navigator.language.toLowerCase() : ''
-        if (navLang.includes('uk')) {
-          setLang('uk')
-          if (!geoPrompted) {
-            setGeoModalOpen(true)
-          }
-        }
+        // Fallback handled in useState
       })
   }, [])
 
@@ -891,7 +1088,7 @@ function HomePage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [tourActive, isLandingBack, t.tourSteps])
 
-  // OpenRouter API Call to Krakenus AI with Language Fallback Fix
+  // OpenRouter API Call to Krakenus AI with Graceful Fallback for Missing Key / 401
   const handleSendAiMessage = async (textToSend?: string) => {
     const prompt = (textToSend || aiInput).trim()
     if (!prompt || aiLoading) return
@@ -910,9 +1107,13 @@ function HomePage() {
     const systemPrompt = `You are Krakenus AI, the official neural assistant for Octopus Labs. You respond cleanly, professionally, and warmly in the user's language (${lang === 'uk' ? 'Ukrainian' : lang === 'en' ? 'English' : 'Russian'}).
 
 IMPORTANT STATUS DIRECTIVE:
-All planned ecosystem products (Octopus Search, Octopus Studio, Octopus Cloud) are currently in CLOSED BETA TESTING (Закрытый Бета-Тест) and NOT yet publicly released. If asked about release or availability, explain that closed beta testing is underway to ensure high quality before public release.`
+All planned ecosystem products (Octopus Search, Octopus Studio, Octopus Cloud) are currently in CLOSED BETA TESTING (Закрытый Бета-Тест) and NOT yet publicly released. Octopus Search is paused because the team is integrating their own proprietary Octopus AI neural model! Explain this warmly to visitors.`
 
     try {
+      if (!OPENROUTER_API_KEY) {
+        throw new Error('API_KEY_MISSING')
+      }
+
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -951,16 +1152,18 @@ All planned ecosystem products (Octopus Search, Octopus Studio, Octopus Cloud) a
         return next
       })
     } catch (err) {
-      console.error('Krakenus AI error:', err)
+      console.warn('Krakenus AI network or API key fallback:', err)
+      const aiModelNote = lang === 'uk'
+        ? 'Вітаю! Усі сервіси Octopus перебувають у стадії **закритого бета-тестування**. Наразі ми активно готуємо до релізу **нашу власну нейромережу Octopus AI**, тому доступ до зовнішніх ключів може бути тимчасово обмежений. Задавайте інші питання про нашу екосистему!'
+        : lang === 'en'
+        ? 'Greetings! All Octopus services are currently in **closed beta testing**. We are actively preparing the launch of **our own proprietary Octopus AI model**, so external API keys might be restricted. Feel free to ask any other questions about our ecosystem!'
+        : 'Приветствую! Все сервисы Octopus сейчас находятся в этапе **закрытого бета-тестирования**. Мы активно готовим к релизу **нашу собственную нейросеть Octopus AI**, поэтому доступ к внешним API ключам может быть ограничен. Задавайте любые другие вопросы о нашей экосистеме!'
+
       setChatMessages((prev) => {
         const next = [...prev]
         next[next.length - 1] = {
           sender: 'ai',
-          text: lang === 'uk'
-            ? 'Вибачте! Сталася невелика мережева пауза. Будь ласка, спробуйте ще раз.'
-            : lang === 'en'
-            ? 'Sorry! A brief network error occurred. Please try asking again.'
-            : 'Извините! Произошла небольшая пауза сети. Задайте вопрос ещё раз.',
+          text: aiModelNote,
         }
         return next
       })
@@ -1391,6 +1594,25 @@ All planned ecosystem products (Octopus Search, Octopus Studio, Octopus Cloud) a
 
       {/* REST OF SITE */}
       <div className={`site-sections-wrap ${!tourUnlocked && !tourActive ? 'is-locked-sections' : ''}`}>
+        {/* PROPRIETARY AI ANNOUNCEMENT NOTICE */}
+        <section className="announcement-section reveal-on-scroll" id="announcement">
+          <div className="announcement-bar">
+            <div className="announcement-info">
+              <div className="announcement-icon-wrapper">
+                <Bot size={20} />
+              </div>
+              <div className="announcement-text-group">
+                <h4>{t.announcement.title}</h4>
+                <p>{t.announcement.text}</p>
+              </div>
+            </div>
+            <div className="announcement-tag-badge">
+              <Sparkles size={13} />
+              <span>{t.announcement.badge}</span>
+            </div>
+          </div>
+        </section>
+
         <section className="manifesto reveal-on-scroll" id="manifesto">
           <div className="section-kicker">{t.manifesto.kicker}</div>
           <div className="manifesto-main">
@@ -1490,22 +1712,22 @@ All planned ecosystem products (Octopus Search, Octopus Studio, Octopus Cloud) a
               <div className="domain-root__icon"><Boxes /></div>
               <div>
                 <small>{t.domainsSection.rootTag}</small>
-                <strong>octopus.netlify.app</strong>
+                <strong>octopus-labs.vercel.app</strong>
               </div>
               <span>{t.domainsSection.rootSpan}</span>
             </div>
             <div className="domain-branch" />
             <div className="domain-child domain-child--one">
-              <Search size={18} />
-              <div><small>{t.domainsSection.s1Tag}</small><strong>search.octopus.dev</strong></div>
+              <Bot size={18} />
+              <div><small>{t.domainsSection.s1Tag}</small><strong>ai.octopus-labs.vercel.app</strong></div>
             </div>
             <div className="domain-child domain-child--two">
               <Braces size={18} />
-              <div><small>{t.domainsSection.s2Tag}</small><strong>studio.octopus.dev</strong></div>
+              <div><small>{t.domainsSection.s2Tag}</small><strong>studio.octopus-labs.vercel.app</strong></div>
             </div>
             <div className="domain-child domain-child--three">
               <Cloud size={18} />
-              <div><small>{t.domainsSection.s3Tag}</small><strong>cloud.octopus.dev</strong></div>
+              <div><small>{t.domainsSection.s3Tag}</small><strong>cloud.octopus-labs.vercel.app</strong></div>
             </div>
           </div>
         </section>
